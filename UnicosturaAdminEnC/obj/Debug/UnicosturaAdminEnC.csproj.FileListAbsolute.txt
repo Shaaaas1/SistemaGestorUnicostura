@@ -20,3 +20,6 @@ C:\Users\royer\Desktop\Proyectos Visual Studio\UnicosturaAdminEnC\UnicosturaAdmi
 C:\Users\royer\Desktop\Proyectos Visual Studio\UnicosturaAdminEnC\UnicosturaAdminEnC\obj\Debug\UnicosturaAdminEnC.SistemaGestorUnicostura.resources
 C:\Users\royer\Desktop\Proyectos Visual Studio\UnicosturaAdminEnC\UnicosturaAdminEnC\obj\Debug\UnicosturaAdminEnC.AdminBD.resources
 C:\Users\royer\Desktop\Proyectos Visual Studio\UnicosturaAdminEnC\UnicosturaAdminEnC\obj\Debug\UnicosturaAdminEnC.AdministrarTallas.resources
+C:\Users\royer\Desktop\Proyectos Visual Studio\UnicosturaAdminEnC\UnicosturaAdminEnC\obj\Debug\UnicosturaAdminEnC.AdminNumeroMoldes.resources
+C:\Users\royer\Desktop\Proyectos Visual Studio\UnicosturaAdminEnC\UnicosturaAdminEnC\obj\Debug\UnicosturaAdminEnC.AdministarTipoPago.resources
+C:\Users\royer\Desktop\Proyectos Visual Studio\UnicosturaAdminEnC\UnicosturaAdminEnC\obj\Debug\UnicosturaAdminEnC.AdministarDistribucion.resources

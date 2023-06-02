@@ -1,6 +1,6 @@
 ﻿namespace UnicosturaAdminEnC
 {
-    partial class AdminBD
+    partial class AdministarClientes
     {
         /// <summary>
         /// Required designer variable.
@@ -28,33 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.Btn_AdminTallas = new System.Windows.Forms.Button();
-            this.SuspendLayout();
-            // 
-            // Btn_AdminTallas
-            // 
-            this.Btn_AdminTallas.Location = new System.Drawing.Point(30, 43);
-            this.Btn_AdminTallas.Name = "Btn_AdminTallas";
-            this.Btn_AdminTallas.Size = new System.Drawing.Size(227, 100);
-            this.Btn_AdminTallas.TabIndex = 0;
-            this.Btn_AdminTallas.Text = "Administrar Tallas";
-            this.Btn_AdminTallas.UseVisualStyleBackColor = true;
-            this.Btn_AdminTallas.Click += new System.EventHandler(this.Btn_AdminTallas_Click);
-            // 
-            // AdminBD
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.Btn_AdminTallas);
-            this.Name = "AdminBD";
-            this.Text = "AdminBD";
-            this.ResumeLayout(false);
-
+            this.Text = "AdministarClientes";
         }
 
         #endregion
-
-        private System.Windows.Forms.Button Btn_AdminTallas;
     }
 }

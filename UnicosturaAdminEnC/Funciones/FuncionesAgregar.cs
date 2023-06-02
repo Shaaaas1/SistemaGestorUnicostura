@@ -39,13 +39,13 @@ public class FuncionesAgregar
     }
 
     // Función para agregar un objeto Distribucion a la base de datos
-    public static void AgregarDistribucion(string nombre)
+    public static void AgregarDistribucion(string nombreDistribucion)
     {
-        string query = "INSERT INTO Distribucion (NombreDistribucion) VALUES (@nombre)";
+        string query = "INSERT INTO Distribucion (NombreDistribucio) VALUES (@nombreDistribucion)";
 
         using (SQLiteCommand command = new SQLiteCommand(query, connection))
         {
-            command.Parameters.AddWithValue("@nombre", nombre);
+            command.Parameters.AddWithValue("@nombreDistribucion", nombreDistribucion);
 
             connection.Open();
             command.ExecuteNonQuery();

@@ -86,6 +86,7 @@ namespace UnicosturaAdminEnC
         }
 
         private void btn_EliminarTalla_Click(object sender, EventArgs e)
+        
         {
 
                 string nombreTalla = textBox1.Text;
@@ -104,5 +105,6 @@ namespace UnicosturaAdminEnC
             FuncionesEliminar.EliminarTalla(nombreTalla);
             AdministrarTallas_Load(sender, e);
         }
+
     }
 }

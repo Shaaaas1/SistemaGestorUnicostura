@@ -65,38 +65,86 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdminBD.cs">
+    <Compile Include="Clases\Distribucion.cs" />
+    <Compile Include="Clases\Moldes.cs" />
+    <Compile Include="Clases\TipoPago.cs" />
+    <Compile Include="Fomularios\AdminBD.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AdminBD.Designer.cs">
+    <Compile Include="Fomularios\AdminBD.Designer.cs">
       <DependentUpon>AdminBD.cs</DependentUpon>
     </Compile>
-    <Compile Include="AdministrarTallas.cs">
+    <Compile Include="Fomularios\AdministarClientes.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AdministrarTallas.Designer.cs">
+    <Compile Include="Fomularios\AdministarClientes.Designer.cs">
+      <DependentUpon>AdministarClientes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Fomularios\AdministarDetallesPedido.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Fomularios\AdministarDetallesPedido.Designer.cs">
+      <DependentUpon>AdministarDetallesPedido.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Fomularios\AdministarDistribucion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Fomularios\AdministarDistribucion.Designer.cs">
+      <DependentUpon>AdministarDistribucion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Fomularios\AdministarPedidos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Fomularios\AdministarPedidos.Designer.cs">
+      <DependentUpon>AdministarPedidos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Fomularios\AdministarTipoPago.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Fomularios\AdministarTipoPago.Designer.cs">
+      <DependentUpon>AdministarTipoPago.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Fomularios\AdministrarTallas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Fomularios\AdministrarTallas.Designer.cs">
       <DependentUpon>AdministrarTallas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Fomularios\AdminNumeroMoldes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Fomularios\AdminNumeroMoldes.Designer.cs">
+      <DependentUpon>AdminNumeroMoldes.cs</DependentUpon>
     </Compile>
     <Compile Include="BaseDeDatos.cs" />
-    <Compile Include="FuncionesBuscar.cs" />
-    <Compile Include="FuncionesEliminar.cs" />
-    <Compile Include="SistemaGestorUnicostura.cs">
+    <Compile Include="Funciones\FuncionesBuscar.cs" />
+    <Compile Include="Funciones\FuncionesEliminar.cs" />
+    <Compile Include="Fomularios\SistemaGestorUnicostura.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SistemaGestorUnicostura.Designer.cs">
+    <Compile Include="Fomularios\SistemaGestorUnicostura.Designer.cs">
       <DependentUpon>SistemaGestorUnicostura.cs</DependentUpon>
     </Compile>
-    <Compile Include="FuncionesAgregar.cs" />
+    <Compile Include="Funciones\FuncionesAgregar.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Talla.cs" />
-    <EmbeddedResource Include="AdminBD.resx">
+    <Compile Include="Clases\Talla.cs" />
+    <EmbeddedResource Include="Fomularios\AdminBD.resx">
       <DependentUpon>AdminBD.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AdministrarTallas.resx">
+    <EmbeddedResource Include="Fomularios\AdministarDistribucion.resx">
+      <DependentUpon>AdministarDistribucion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Fomularios\AdministarTipoPago.resx">
+      <DependentUpon>AdministarTipoPago.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Fomularios\AdministrarTallas.resx">
       <DependentUpon>AdministrarTallas.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SistemaGestorUnicostura.resx">
+    <EmbeddedResource Include="Fomularios\AdminNumeroMoldes.resx">
+      <DependentUpon>AdminNumeroMoldes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Fomularios\SistemaGestorUnicostura.resx">
       <DependentUpon>SistemaGestorUnicostura.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
