@@ -65,6 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Clases\Cliente.cs" />
     <Compile Include="Clases\Distribucion.cs" />
     <Compile Include="Clases\Moldes.cs" />
     <Compile Include="Clases\Repartidor.cs" />
@@ -139,6 +140,9 @@
     <EmbeddedResource Include="Fomularios\AdminBD.resx">
       <DependentUpon>AdminBD.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Fomularios\AdministarClientes.resx">
+      <DependentUpon>AdministarClientes.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Fomularios\AdministarDistribucion.resx">
       <DependentUpon>AdministarDistribucion.cs</DependentUpon>
     </EmbeddedResource>
@@ -167,6 +171,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\UnicosturaAdminEnC.Clases.Cliente.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

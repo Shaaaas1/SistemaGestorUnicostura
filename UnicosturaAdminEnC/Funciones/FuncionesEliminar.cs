@@ -95,4 +95,21 @@ public class FuncionesEliminar
         }
     }
 
+    public static void EliminarCliente(string nombreCliente)
+    {
+        using (SQLiteConnection conn = new SQLiteConnection(connection))
+        {
+            conn.Open();
+
+            string query = "DELETE FROM Cliente WHERE NombreCliente = @nombreCliente";
+            using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@nombreCliente", nombreCliente);
+                cmd.ExecuteNonQuery();
+            }
+
+            conn.Close();
+        }
+    }
+
 }

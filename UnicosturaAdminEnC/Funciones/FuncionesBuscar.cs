@@ -125,4 +125,29 @@ public class FuncionesBuscar
             }
         }
     }
+
+    public static DataTable BuscarCliente(string nombreCliente)
+    {
+        string query = "SELECT * FROM Cliente WHERE NombreCliente LIKE @NombreCliente";
+
+        using (SQLiteConnection conn = new SQLiteConnection(connection))
+        {
+            conn.Open();
+
+            using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@NombreCliente", "%" + nombreCliente + "%");
+
+                using (SQLiteDataAdapter adapter = new SQLiteDataAdapter(cmd))
+                {
+                    DataTable dtClientes = new DataTable();
+                    adapter.Fill(dtClientes);
+
+                    return dtClientes;
+                }
+            }
+        }
+    }
+
+
 }
