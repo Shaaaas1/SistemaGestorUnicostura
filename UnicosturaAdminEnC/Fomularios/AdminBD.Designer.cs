@@ -32,6 +32,7 @@
             this.btn_NumeroMoldes = new System.Windows.Forms.Button();
             this.btn_TipoPago = new System.Windows.Forms.Button();
             this.btn_Distribucion = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // Btn_AdminTallas
@@ -74,11 +75,22 @@
             this.btn_Distribucion.UseVisualStyleBackColor = true;
             this.btn_Distribucion.Click += new System.EventHandler(this.btn_Distribucion_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(12, 224);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(227, 100);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "Administar Repartidores";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // AdminBD
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(507, 237);
+            this.ClientSize = new System.Drawing.Size(507, 332);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.btn_Distribucion);
             this.Controls.Add(this.btn_TipoPago);
             this.Controls.Add(this.btn_NumeroMoldes);
@@ -95,5 +107,6 @@
         private System.Windows.Forms.Button btn_NumeroMoldes;
         private System.Windows.Forms.Button btn_TipoPago;
         private System.Windows.Forms.Button btn_Distribucion;
+        private System.Windows.Forms.Button button1;
     }
 }

@@ -78,4 +78,21 @@ public class FuncionesEliminar
         }
     }
 
+    public static void EliminarRepartidor(string nombreRepartidor)
+    {
+        using (SQLiteConnection conn = new SQLiteConnection("Data Source=pedidos.db;Version=3;"))
+        {
+            conn.Open();
+
+            string query = "DELETE FROM Repartidor WHERE NombreRepartidor = @nombreRepartidor";
+            using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@nombreRepartidor", nombreRepartidor);
+                cmd.ExecuteNonQuery();
+            }
+
+            conn.Close();
+        }
+    }
+
 }

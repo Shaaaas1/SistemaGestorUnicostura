@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using UnicosturaAdminEnC.Fomularios;
 
 namespace UnicosturaAdminEnC
 {
@@ -21,6 +22,7 @@ namespace UnicosturaAdminEnC
         private AdminNumeroMoldes adminNumeroMoldes;
         private AdministarTipoPago administarTipoPago;
         private AdministarDistribucion administarDistribucion;
+        private AdministarRepartidores administarRepartidores;
 
         private void Btn_AdminTallas_Click(object sender, EventArgs e)
         {
@@ -60,6 +62,16 @@ namespace UnicosturaAdminEnC
                 administarDistribucion.FormClosed += (s, args) => administarDistribucion = null; // Esto permite liberar la instancia cuando se cierra el formulario
             }
             administarDistribucion.Show();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (administarRepartidores == null)
+            {
+                administarRepartidores = new AdministarRepartidores();
+                administarRepartidores.FormClosed += (s, args) => administarRepartidores = null; // Esto permite liberar la instancia cuando se cierra el formulario
+            }
+            administarRepartidores.Show();
         }
     }
 }

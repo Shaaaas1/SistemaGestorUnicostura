@@ -103,4 +103,26 @@ public class FuncionesBuscar
         }
     }
 
+    public static DataTable BuscarRepartidor(string nombreRepartidor)
+    {
+        string query = "SELECT * FROM Repartidor WHERE NombreRepartidor LIKE @nombreRepartidor";
+
+        using (SQLiteConnection conn = new SQLiteConnection(connection))
+        {
+            conn.Open();
+
+            using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@NombreRepartidor", "%" + nombreRepartidor + "%");
+
+                using (SQLiteDataAdapter adapter = new SQLiteDataAdapter(cmd))
+                {
+                    DataTable dtRepartidor = new DataTable();
+                    adapter.Fill(dtRepartidor);
+
+                    return dtRepartidor;
+                }
+            }
+        }
+    }
 }

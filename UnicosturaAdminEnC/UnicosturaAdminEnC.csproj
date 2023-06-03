@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="Clases\Distribucion.cs" />
     <Compile Include="Clases\Moldes.cs" />
+    <Compile Include="Clases\Repartidor.cs" />
     <Compile Include="Clases\TipoPago.cs" />
     <Compile Include="Fomularios\AdminBD.cs">
       <SubType>Form</SubType>
@@ -97,6 +98,12 @@
     </Compile>
     <Compile Include="Fomularios\AdministarPedidos.Designer.cs">
       <DependentUpon>AdministarPedidos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Fomularios\AdministarRepartidores.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Fomularios\AdministarRepartidores.Designer.cs">
+      <DependentUpon>AdministarRepartidores.cs</DependentUpon>
     </Compile>
     <Compile Include="Fomularios\AdministarTipoPago.cs">
       <SubType>Form</SubType>
@@ -134,6 +141,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Fomularios\AdministarDistribucion.resx">
       <DependentUpon>AdministarDistribucion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Fomularios\AdministarRepartidores.resx">
+      <DependentUpon>AdministarRepartidores.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Fomularios\AdministarTipoPago.resx">
       <DependentUpon>AdministarTipoPago.cs</DependentUpon>
