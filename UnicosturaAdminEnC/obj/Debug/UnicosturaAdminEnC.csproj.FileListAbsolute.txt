@@ -25,3 +25,4 @@ C:\Users\royer\Desktop\Proyectos Visual Studio\UnicosturaAdminEnC\UnicosturaAdmi
 C:\Users\royer\Desktop\Proyectos Visual Studio\UnicosturaAdminEnC\UnicosturaAdminEnC\obj\Debug\UnicosturaAdminEnC.AdministarDistribucion.resources
 C:\Users\royer\Desktop\Proyectos Visual Studio\UnicosturaAdminEnC\UnicosturaAdminEnC\obj\Debug\UnicosturaAdminEnC.Fomularios.AdministarRepartidores.resources
 C:\Users\royer\Desktop\Proyectos Visual Studio\UnicosturaAdminEnC\UnicosturaAdminEnC\obj\Debug\UnicosturaAdminEnC.AdministarClientes.resources
+C:\Users\royer\Desktop\Proyectos Visual Studio\UnicosturaAdminEnC\UnicosturaAdminEnC\obj\Debug\UnicosturaAdminEnC.AdministarPedidos.resources

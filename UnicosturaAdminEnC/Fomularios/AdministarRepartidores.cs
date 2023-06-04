@@ -103,5 +103,10 @@ namespace UnicosturaAdminEnC.Fomularios
 
             return repartidores;
         }
+
+        private void AdministarRepartidores_Load(object sender, EventArgs e)
+        {
+            AdministarRepartidor_Load(sender, e);
+        }
     }
 }

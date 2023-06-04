@@ -44,9 +44,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(407, 3);
+            this.button1.Location = new System.Drawing.Point(405, 3);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(196, 137);
+            this.button1.Size = new System.Drawing.Size(198, 137);
             this.button1.TabIndex = 0;
             this.button1.Text = "Administrar Base de Datos";
             this.button1.UseVisualStyleBackColor = true;
@@ -58,9 +58,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_AdminClientes.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_AdminClientes.Location = new System.Drawing.Point(205, 3);
+            this.btn_AdminClientes.Location = new System.Drawing.Point(204, 3);
             this.btn_AdminClientes.Name = "btn_AdminClientes";
-            this.btn_AdminClientes.Size = new System.Drawing.Size(196, 137);
+            this.btn_AdminClientes.Size = new System.Drawing.Size(195, 137);
             this.btn_AdminClientes.TabIndex = 1;
             this.btn_AdminClientes.Text = "Administrar Clientes";
             this.btn_AdminClientes.UseVisualStyleBackColor = true;
@@ -74,10 +74,11 @@
             this.btn_AdminPedidos.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_AdminPedidos.Location = new System.Drawing.Point(3, 3);
             this.btn_AdminPedidos.Name = "btn_AdminPedidos";
-            this.btn_AdminPedidos.Size = new System.Drawing.Size(196, 137);
+            this.btn_AdminPedidos.Size = new System.Drawing.Size(195, 137);
             this.btn_AdminPedidos.TabIndex = 2;
             this.btn_AdminPedidos.Text = "Administrar Pedidos";
             this.btn_AdminPedidos.UseVisualStyleBackColor = true;
+            this.btn_AdminPedidos.Click += new System.EventHandler(this.btn_AdminPedidos_Click);
             // 
             // label1
             // 

@@ -132,7 +132,7 @@
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(12, 151);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(760, 189);
+            this.dataGridView1.Size = new System.Drawing.Size(745, 189);
             this.dataGridView1.TabIndex = 8;
             this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellDoubleClick);
             // 
@@ -213,7 +213,7 @@
             // 
             // btn_EliminardeGrilla
             // 
-            this.btn_EliminardeGrilla.Location = new System.Drawing.Point(671, 122);
+            this.btn_EliminardeGrilla.Location = new System.Drawing.Point(656, 122);
             this.btn_EliminardeGrilla.Name = "btn_EliminardeGrilla";
             this.btn_EliminardeGrilla.Size = new System.Drawing.Size(101, 23);
             this.btn_EliminardeGrilla.TabIndex = 19;
@@ -253,7 +253,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 348);
+            this.ClientSize = new System.Drawing.Size(765, 348);
             this.Controls.Add(this.tbx_Fuente);
             this.Controls.Add(this.btn_Actualizar);
             this.Controls.Add(this.btn_EliminardeGrilla);

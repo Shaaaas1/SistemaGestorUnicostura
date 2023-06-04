@@ -28,7 +28,7 @@ namespace UnicosturaAdminEnC
         private void btn_Agregar_Click(object sender, EventArgs e)
         {
             string nombreCliente = tbx_NombreCliente.Text;
-            int numeroCliente = tbx_NumeroCliente.Text.Length;
+            int numeroCliente = int.Parse(tbx_NumeroCliente.Text);
             string direccion = tbx_Direccion.Text;
             string rut = tbx_Rut.Text;
             string alias = tbx_Alias.Text;

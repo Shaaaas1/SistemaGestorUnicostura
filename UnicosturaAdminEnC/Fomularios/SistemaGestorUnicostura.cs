@@ -21,6 +21,7 @@ namespace UnicosturaAdminEnC
 
         private AdminBD adminBD;
         private AdministarClientes administarClientes;
+        private AdministarPedidos administarPedidos;
 
         private void Btn_AdministrarBaseDeDatos(object sender, EventArgs e)
         {
@@ -45,6 +46,16 @@ namespace UnicosturaAdminEnC
                 administarClientes.FormClosed += (s, args) => administarClientes = null; // Esto permite liberar la instancia cuando se cierra el formulario
             }
             administarClientes.Show();
+        }
+
+        private void btn_AdminPedidos_Click(object sender, EventArgs e)
+        {
+            if (administarPedidos == null)
+            {
+                administarPedidos = new AdministarPedidos();
+                administarPedidos.FormClosed += (s, args) => administarPedidos = null; // Esto permite liberar la instancia cuando se cierra el formulario
+            }
+            administarPedidos.Show();
         }
     }
 }

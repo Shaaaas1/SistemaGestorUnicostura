@@ -27,6 +27,7 @@ namespace UnicosturaAdminEnC
 
             FuncionesAgregar.AgregarTalla(nombreTalla);
             AdministrarTallas_Load(sender, e);
+            textBox1.Text = "";
         }
 
         private void AdministrarTallas_Load(object sender, EventArgs e)
