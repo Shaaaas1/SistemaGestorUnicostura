@@ -89,7 +89,7 @@ namespace UnicosturaAdminEnC
                             // Crear un objeto Moldes con los datos de cada fila
                             TipoPago tipoPago = new TipoPago
                             {
-                                IdTipoPago = Convert.ToInt32(reader["IdPago"]),
+                                IdPago = Convert.ToInt32(reader["IdPago"]),
                                 NombrePago = Convert.ToString(reader["NombrePago"])
                             };
 

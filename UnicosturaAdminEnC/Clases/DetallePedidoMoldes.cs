@@ -12,7 +12,6 @@ namespace UnicosturaAdminEnC.Clases
         public int IdPedido { get; set; }
         public int IdTalla { get; set; }
         public int CodigoMolde { get; set; }
-        public string TallaMoldel { get; set; }
         public Boolean MoldeEnStock { get; set; }
         public Boolean MoldeFallido { get; set; }
     }

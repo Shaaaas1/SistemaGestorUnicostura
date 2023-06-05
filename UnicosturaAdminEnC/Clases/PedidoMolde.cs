@@ -9,6 +9,7 @@ namespace UnicosturaAdminEnC.Clases
     public class PedidoMolde
     {
         public int IdPedido { get; set; }
+        public int IdCliente { get; set; }
         public int IdEstado { get; set;}
         public int IdRepartidor { get; set;}
         public int IdDistribucion { get; set;}

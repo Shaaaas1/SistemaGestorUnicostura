@@ -149,5 +149,50 @@ public class FuncionesBuscar
         }
     }
 
+    public static DataTable BuscarPedido(int idCliente)
+    {
+        string query = "SELECT * FROM PedidoMolde WHERE IdCliente LIKE @idCliente";
+
+        using (SQLiteConnection conn = new SQLiteConnection(connection))
+        {
+            conn.Open();
+
+            using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@IdCliente", "%" + idCliente + "%");
+
+                using (SQLiteDataAdapter adapter = new SQLiteDataAdapter(cmd))
+                {
+                    DataTable dtPedidos = new DataTable();
+                    adapter.Fill(dtPedidos);
+
+                    return dtPedidos;
+                }
+            }
+        }
+    }
+
+    public static DataTable BuscarDetallePedido(int IdPedido)
+    {
+        string query = "SELECT * FROM DetallePedidoMoldes WHERE CodigoMolde LIKE @IdPedido";
+
+        using (SQLiteConnection conn = new SQLiteConnection(connection))
+        {
+            conn.Open();
+
+            using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@IdPedido", "%" + IdPedido + "%");
+
+                using (SQLiteDataAdapter adapter = new SQLiteDataAdapter(cmd))
+                {
+                    DataTable dtDetallePedido = new DataTable();
+                    adapter.Fill(dtDetallePedido);
+
+                    return dtDetallePedido;
+                }
+            }
+        }
+    }
 
 }

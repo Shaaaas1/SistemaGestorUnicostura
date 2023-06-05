@@ -8,7 +8,7 @@ namespace UnicosturaAdminEnC.Clases
 {
     public class TipoPago
     {
-        public int IdTipoPago { get; set; }
+        public int IdPago { get; set; }
         public string NombrePago{ get; set; }
 
     }

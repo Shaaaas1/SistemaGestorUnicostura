@@ -161,6 +161,9 @@
     <EmbeddedResource Include="Fomularios\AdministarClientes.resx">
       <DependentUpon>AdministarClientes.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Fomularios\AdministarDetallesPedido.resx">
+      <DependentUpon>AdministarDetallesPedido.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Fomularios\AdministarDistribucion.resx">
       <DependentUpon>AdministarDistribucion.cs</DependentUpon>
     </EmbeddedResource>

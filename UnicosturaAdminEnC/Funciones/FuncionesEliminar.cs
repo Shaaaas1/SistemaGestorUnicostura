@@ -112,4 +112,56 @@ public class FuncionesEliminar
         }
     }
 
+    public static void EliminarPedido(int idPedido)
+    {
+        using (SQLiteConnection conn = new SQLiteConnection(connection))
+        {
+            conn.Open();
+
+            // Eliminar el PedidoMolde
+            string deletePedidoQuery = "DELETE FROM PedidoMolde WHERE IdPedido = @idPedido";
+            using (SQLiteCommand deletePedidoCmd = new SQLiteCommand(deletePedidoQuery, conn))
+            {
+                deletePedidoCmd.Parameters.AddWithValue("@idPedido", idPedido);
+                deletePedidoCmd.ExecuteNonQuery();
+            }
+
+            // Eliminar el Estado asociado al Pedido eliminado
+            string deleteEstadoQuery = "DELETE FROM Estado WHERE IdEstado = @idEstado";
+            using (SQLiteCommand deleteEstadoCmd = new SQLiteCommand(deleteEstadoQuery, conn))
+            {
+                // Obtener el IdEstado del Pedido eliminado
+                string getIdEstadoQuery = "SELECT IdEstado FROM PedidoMolde WHERE IdPedido = @idPedido";
+                using (SQLiteCommand getIdEstadoCmd = new SQLiteCommand(getIdEstadoQuery, conn))
+                {
+                    getIdEstadoCmd.Parameters.AddWithValue("@idPedido", idPedido);
+                    int idEstado = Convert.ToInt32(getIdEstadoCmd.ExecuteScalar());
+
+                    deleteEstadoCmd.Parameters.AddWithValue("@idEstado", idEstado);
+                    deleteEstadoCmd.ExecuteNonQuery();
+                }
+            }
+
+            conn.Close();
+        }
+
+    }
+
+    public static void EliminarDetallePedido(int idDetallePedido)
+    {
+        using (SQLiteConnection conn = new SQLiteConnection(connection))
+        {
+            conn.Open();
+
+            string query = "DELETE FROM DetallePedidoMoldes WHERE IdDetallePedido = @idDetallePedido";
+            using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@idDetallePedido", idDetallePedido);
+                cmd.ExecuteNonQuery();
+            }
+
+            conn.Close();
+        }
+    }
+
 }

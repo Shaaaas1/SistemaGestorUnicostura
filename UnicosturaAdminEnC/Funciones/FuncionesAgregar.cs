@@ -69,9 +69,11 @@ public class FuncionesAgregar
     }
 
     // Función para agregar un objeto Estado a la base de datos
-    public static void AgregarEstado(bool impreso, bool pagado, bool boleta, bool entregado)
+    public static int AgregarEstado(bool impreso, bool pagado, bool boleta, bool entregado)
     {
-        string query = "INSERT INTO Estado (Impreso, Pagado, Boleta, Entregado) VALUES (@impreso, @pagado, @boleta, @entregado)";
+        int idEstadoRecienIngresado = 0;
+
+        string query = "INSERT INTO Estado (Impreso, Pagado, Boleta, Entregado) VALUES (@impreso, @pagado, @boleta, @entregado); SELECT LAST_INSERT_ROWID();";
 
         using (SQLiteCommand command = new SQLiteCommand(query, connection))
         {
@@ -81,9 +83,14 @@ public class FuncionesAgregar
             command.Parameters.AddWithValue("@entregado", entregado);
 
             connection.Open();
-            command.ExecuteNonQuery();
+
+            // Ejecutar la consulta de inserción y obtener el último ID insertado
+            idEstadoRecienIngresado = Convert.ToInt32(command.ExecuteScalar());
+
             connection.Close();
         }
+
+        return idEstadoRecienIngresado;
     }
 
     // Función para agregar un objeto Repartidor a la base de datos
@@ -121,13 +128,37 @@ public class FuncionesAgregar
         }
     }
 
-    // Función para agregar un objeto PedidoMolde a la base de datos
-    public static void AgregarPedidoMolde(int idEstado, int idRepartidor, int idDistribucion, int idPago, int totalMoldes, int valorPedido, int numBoletaImpresa, DateTime fecha)
+    public static int AgregarCliente2(string nombre, int celular, string direccion, string rut, string alias, string fuente)
     {
-        string query = "INSERT INTO PedidoMolde (IdEstado, IdRepartidor, IdDistribucion, IdPago, TotalMoldes, ValorPedido, NumBoletaImpresa, Fecha) VALUES (@idEstado, @idRepartidor, @idDistribucion, @idPago, @totalMoldes, @valorPedido, @numBoletaImpresa, @fecha)";
+        string query = "INSERT INTO Cliente (NombreCliente, CelularCliente, Direccion, Rut, Alias, Fuente) VALUES (@nombre, @celular, @direccion, @rut, @alias, @fuente); SELECT last_insert_rowid();";
+
+        int idCliente = 0;
 
         using (SQLiteCommand command = new SQLiteCommand(query, connection))
         {
+            command.Parameters.AddWithValue("@nombre", nombre);
+            command.Parameters.AddWithValue("@celular", celular);
+            command.Parameters.AddWithValue("@direccion", direccion);
+            command.Parameters.AddWithValue("@rut", rut);
+            command.Parameters.AddWithValue("@alias", alias);
+            command.Parameters.AddWithValue("@fuente", fuente);
+
+            connection.Open();
+            idCliente = Convert.ToInt32(command.ExecuteScalar());
+            connection.Close();
+        }
+
+        return idCliente;
+    }
+
+    // Función para agregar un objeto PedidoMolde a la base de datos
+    public static void AgregarPedidoMolde(int idCliente, int idEstado, int idRepartidor, int idDistribucion, int idPago, int totalMoldes, int valorPedido, int numBoletaImpresa, DateTime fecha)
+    {
+        string query = "INSERT INTO PedidoMolde (IdCliente, IdEstado, IdRepartidor, IdDistribucion, IdPago, TotalMoldes, ValorPedido, NumBoletaImpresa, Fecha) VALUES (@idCliente, @idEstado, @idRepartidor, @idDistribucion, @idPago, @totalMoldes, @valorPedido, @numBoletaImpresa, @fecha)";
+
+        using (SQLiteCommand command = new SQLiteCommand(query, connection))
+        {
+            command.Parameters.AddWithValue("@idCliente", idCliente);
             command.Parameters.AddWithValue("@idEstado", idEstado);
             command.Parameters.AddWithValue("@idRepartidor", idRepartidor);
             command.Parameters.AddWithValue("@idDistribucion", idDistribucion);
@@ -144,16 +175,15 @@ public class FuncionesAgregar
     }
 
     // Función para agregar un objeto DetallePedidoMoldes a la base de datos
-    public static void AgregarDetallePedidoMoldes(int idPedido, int idTalla, int codigoMolde, string tallaMolde, bool moldeEnStock, bool moldeFallido)
+    public static void AgregarDetallePedidoMoldes(int idPedido, int idTalla, int codigoMolde, bool moldeEnStock, bool moldeFallido)
     {
-        string query = "INSERT INTO DetallePedidoMoldes (IdPedido, IdTalla, CodigoMolde, TallaMolde, MoldeEnStock, MoldeFallido) VALUES (@idPedido, @idTalla, @codigoMolde, @tallaMolde, @moldeEnStock, @moldeFallido)";
+        string query = "INSERT INTO DetallePedidoMoldes (IdPedido, IdTalla, CodigoMolde, MoldeEnStock, MoldeFallido) VALUES (@idPedido, @idTalla, @codigoMolde, @moldeEnStock, @moldeFallido)";
 
         using (SQLiteCommand command = new SQLiteCommand(query, connection))
         {
             command.Parameters.AddWithValue("@idPedido", idPedido);
             command.Parameters.AddWithValue("@idTalla", idTalla);
             command.Parameters.AddWithValue("@codigoMolde", codigoMolde);
-            command.Parameters.AddWithValue("@tallaMolde", tallaMolde);
             command.Parameters.AddWithValue("@moldeEnStock", moldeEnStock);
             command.Parameters.AddWithValue("@moldeFallido", moldeFallido);
 
@@ -176,8 +206,8 @@ public class FuncionesAgregar
         AgregarEstado(true, true, false, false);
         AgregarRepartidor("Repartidor 1");
         AgregarCliente("Cliente 1", 123456789, "Dirección 1", "RUT 1", "Alias 1", "Fuente 1");
-        AgregarPedidoMolde(1, 1, 1, 1, 10, 100, 12345, DateTime.Now);
-        AgregarDetallePedidoMoldes(1, 1, 1, "Talla M", true, false);
+        AgregarPedidoMolde(1, 1, 1, 1, 1, 10, 100, 12345, DateTime.Now);
+        AgregarDetallePedidoMoldes(1, 1, 1, true, false);
     }
 
     // Función para crear las tablas en la base de datos
