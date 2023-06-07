@@ -47,9 +47,9 @@
             // 
             // btn_NumeroMoldes
             // 
-            this.btn_NumeroMoldes.Location = new System.Drawing.Point(261, 12);
+            this.btn_NumeroMoldes.Location = new System.Drawing.Point(12, 220);
             this.btn_NumeroMoldes.Name = "btn_NumeroMoldes";
-            this.btn_NumeroMoldes.Size = new System.Drawing.Size(227, 100);
+            this.btn_NumeroMoldes.Size = new System.Drawing.Size(476, 100);
             this.btn_NumeroMoldes.TabIndex = 1;
             this.btn_NumeroMoldes.Text = "Numero de Moldes";
             this.btn_NumeroMoldes.UseVisualStyleBackColor = true;
@@ -77,7 +77,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(12, 224);
+            this.button1.Location = new System.Drawing.Point(261, 12);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(227, 100);
             this.button1.TabIndex = 4;
@@ -97,6 +97,7 @@
             this.Controls.Add(this.Btn_AdminTallas);
             this.Name = "AdminBD";
             this.Text = "AdminBD";
+            this.Load += new System.EventHandler(this.AdminBD_Load);
             this.ResumeLayout(false);
 
         }

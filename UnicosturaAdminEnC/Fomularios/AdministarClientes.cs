@@ -17,7 +17,9 @@ namespace UnicosturaAdminEnC
         public AdministarClientes()
         {
             InitializeComponent();
-
+            tbx_NombreCliente.KeyPress += tbx_NombreCliente_KeyPress;
+            tbx_NumeroCliente.KeyPress += tbx_NumeroCliente_KeyPress;
+            tbx_Rut.KeyPress += tbx_Rut_KeyPress;
         }
 
         // Conexión a la base de datos
@@ -28,19 +30,54 @@ namespace UnicosturaAdminEnC
         private void btn_Agregar_Click(object sender, EventArgs e)
         {
             string nombreCliente = tbx_NombreCliente.Text;
-            int numeroCliente = int.Parse(tbx_NumeroCliente.Text);
             string direccion = tbx_Direccion.Text;
             string rut = tbx_Rut.Text;
             string alias = tbx_Alias.Text;
+
+            if (string.IsNullOrEmpty(nombreCliente))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Nombre no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
+            string numeroClienteStr = tbx_NumeroCliente.Text;
+
+            if (numeroClienteStr.Length != 9)
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Contacto no puede estar vacío o tener menos de 9 Digitos.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
+            int numeroCliente = int.Parse(tbx_NumeroCliente.Text);
+
+            if (tbx_Fuente.Text == "")
+            {
+                MessageBox.Show("El campo de Fuente no puede estar vacío.\nSe debe seleccionar una de las opciones proporcionadas.", "Error de validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             string fuente = tbx_Fuente.SelectedItem.ToString();
 
-            FuncionesAgregar.AgregarCliente(nombreCliente, numeroCliente, direccion, rut, alias, fuente );
+            FuncionesAgregar.AgregarCliente(nombreCliente, numeroCliente, direccion, rut, alias, fuente);
             AdministrarClientes_Load(sender, e);
+            MessageBox.Show("Se Agrego al Cliente correctamente.");
         }
 
         private void btn_Buscar_Click(object sender, EventArgs e)
         {
             string nombreCliente = tbx_NombreCliente.Text;
+
+            if (string.IsNullOrEmpty(nombreCliente))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Nombre no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
 
             DataTable dtCliente = FuncionesBuscar.BuscarCliente(nombreCliente);
 
@@ -51,11 +88,47 @@ namespace UnicosturaAdminEnC
         {
             // Obtener los valores ingresados en los campos de texto
             string nombreCliente = tbx_NombreCliente.Text;
-            string numeroCliente = tbx_NumeroCliente.Text;
             string direccion = tbx_Direccion.Text;
             string rut = tbx_Rut.Text;
             string alias = tbx_Alias.Text;
+
+            if (string.IsNullOrEmpty(nombreCliente))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Nombre no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
+            string numeroClienteStr = tbx_NumeroCliente.Text;
+
+            if (numeroClienteStr.Length != 9)
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Contacto no puede estar vacío o tener menos de 9 Digitos.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
+            int numeroCliente = int.Parse(tbx_NumeroCliente.Text);
+
+            if (tbx_Fuente.Text == "")
+            {
+                MessageBox.Show("El campo de Fuente no puede estar vacío.\nSe debe seleccionar una de las opciones proporcionadas.", "Error de validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             string fuente = tbx_Fuente.SelectedItem.ToString();
+
+            DialogResult resultado = MessageBox.Show("¿Estás seguro de que deseas Modificar a " + nombreCliente + "?",
+                              "Confirmar Modificacion",
+                              MessageBoxButtons.YesNo,
+                              MessageBoxIcon.Question);
+
+            if (resultado == DialogResult.No)
+            {
+                return;
+            }
 
             // Crear la conexión a la base de datos
             using (SQLiteConnection conn = new SQLiteConnection(connection))
@@ -97,8 +170,29 @@ namespace UnicosturaAdminEnC
         private void btn_Eliminar_Click(object sender, EventArgs e)
         {
             string nombreCliente = tbx_NombreCliente.Text;
-            FuncionesEliminar.EliminarCliente(nombreCliente);
-            AdministrarClientes_Load(sender, e);
+
+            if (string.IsNullOrEmpty(nombreCliente))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Nombre no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
+            DialogResult resultado = MessageBox.Show("¿Estás seguro de que deseas eliminar a " + nombreCliente + "?",
+                              "Confirmar eliminación",
+                              MessageBoxButtons.YesNo,
+                              MessageBoxIcon.Question);
+
+            if (resultado == DialogResult.Yes)
+            {
+                FuncionesEliminar.EliminarCliente(nombreCliente);
+                AdministrarClientes_Load(sender, e);
+            }
+            else
+            {
+                return;
+            }
         }
 
         private void btn_EliminardeGrilla_Click(object sender, EventArgs e)
@@ -108,8 +202,20 @@ namespace UnicosturaAdminEnC
             DataGridViewRow selectedRow = dataGridView1.Rows[rowIndex];
             string nombreCliente = Convert.ToString(selectedRow.Cells["NombreCliente"].Value);
 
-            FuncionesEliminar.EliminarCliente(nombreCliente);
-            AdministrarClientes_Load(sender, e);
+            DialogResult resultado = MessageBox.Show("¿Estás seguro de que deseas eliminar a " + nombreCliente + "?",
+                              "Confirmar eliminación",
+                              MessageBoxButtons.YesNo,
+                              MessageBoxIcon.Question);
+
+            if (resultado == DialogResult.Yes)
+            {
+                FuncionesEliminar.EliminarCliente(nombreCliente);
+                AdministrarClientes_Load(sender, e);
+            }
+            else
+            {
+                return;
+            }
         }
 
         private void AdministrarClientes_Load(object sender, EventArgs e)
@@ -119,6 +225,18 @@ namespace UnicosturaAdminEnC
 
             // Enlazar los datos al DataGridView
             dataGridView1.DataSource = clientes;
+
+            dataGridView1.Columns["IdCliente"].DisplayIndex = 0;
+            dataGridView1.Columns["NombreCliente"].DisplayIndex = 1;
+            dataGridView1.Columns["Alias"].DisplayIndex = 2;
+            dataGridView1.Columns["Fuente"].DisplayIndex = 3;
+            dataGridView1.Columns["CelularCliente"].DisplayIndex = 4;
+            dataGridView1.Columns["Rut"].DisplayIndex = 5;
+            dataGridView1.Columns["Direccion"].DisplayIndex = 6;
+
+            dataGridView1.Columns[0].HeaderText = "ID";
+            dataGridView1.Columns[1].HeaderText = "Nombre";
+            dataGridView1.Columns[2].HeaderText = "Contacto";
         }
 
         // Método para obtener los datos de la tabla "Talla"
@@ -141,11 +259,11 @@ namespace UnicosturaAdminEnC
                             {
                                 IdCliente = Convert.ToInt32(reader["IdCliente"]),
                                 NombreCliente = Convert.ToString(reader["NombreCliente"]),
-                                CelularCliente = Convert.ToInt32(reader["CelularCliente"]),
-                                Direccion = Convert.ToString(reader["Direccion"]),
-                                Rut = Convert.ToString(reader["Rut"]),
                                 Alias = Convert.ToString(reader["Alias"]),
-                                Fuente = Convert.ToString(reader["Fuente"])
+                                Fuente = Convert.ToString(reader["Fuente"]),
+                                CelularCliente = Convert.ToInt32(reader["CelularCliente"]),
+                                Rut = Convert.ToString(reader["Rut"]),
+                                Direccion = Convert.ToString(reader["Direccion"])
                             };
 
                             clientes.Add(cliente);
@@ -192,6 +310,170 @@ namespace UnicosturaAdminEnC
         private void AdministarClientes_Load(object sender, EventArgs e)
         {
             AdministrarClientes_Load(sender, e);
+
+            // Personalizar la apariencia de la ventana
+            this.BackColor = Color.FromArgb(240, 240, 240);
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+
+            // Desactivar la transparencia en el formulario
+            this.TransparencyKey = Color.Empty;
+
+            // Personalizar el estilo de los botones
+            CustomizarBoton(btn_Agregar, "Agregar", Color.FromArgb(192, 192, 192), Color.Black, 12);
+            CustomizarBoton(btn_Buscar, "Buscar", Color.FromArgb(192, 192, 192), Color.Black, 12);
+            CustomizarBoton(btn_Modificar, "Modificar", Color.FromArgb(192, 192, 192), Color.Black, 12);
+            CustomizarBoton(btn_Eliminar, "Eliminar", Color.FromArgb(192, 192, 192), Color.Black, 12);
+            CustomizarBoton(btn_EliminardeGrilla, "Eliminar de Grilla", Color.FromArgb(192, 192, 192), Color.Black, 12);
+            CustomizarBoton(btn_Actualizar, "Actualizar", Color.FromArgb(192, 192, 192), Color.Black, 12);
+
+            // Personalizar el estilo de los labels
+            CustomizarLabel(label1, "ID Cliente", Color.FromArgb(64, 64, 64), 12);
+            CustomizarLabel(label2, "Nombre", Color.FromArgb(64, 64, 64), 12);
+            CustomizarLabel(label3, "Contacto", Color.FromArgb(64, 64, 64), 12);
+            CustomizarLabel(label4, "Dirección", Color.FromArgb(64, 64, 64), 12);
+            CustomizarLabel(label5, "Rut", Color.FromArgb(64, 64, 64), 12);
+            CustomizarLabel(label6, "Alias", Color.FromArgb(64, 64, 64), 12);
+            CustomizarLabel(label7, "Fuente", Color.FromArgb(64, 64, 64), 12);
+        }
+
+        private void CustomizarBoton(Button boton, string texto, Color colorFondo, Color colorTexto, int tamanoFuente)
+        {
+            boton.Text = texto;
+            boton.BackColor = colorFondo;
+            boton.ForeColor = colorTexto;
+            boton.Font = new Font("Arial", tamanoFuente, FontStyle.Bold);
+            boton.FlatAppearance.MouseDownBackColor = colorFondo;
+            boton.FlatAppearance.MouseOverBackColor = ControlPaint.Light(colorFondo);
+
+            // Establecer el color y grosor del borde
+            boton.FlatStyle = FlatStyle.Flat;
+            boton.FlatAppearance.BorderSize = 3;
+            boton.FlatAppearance.BorderColor = Color.FromArgb(220, 220, 220);
+        }
+
+        private void CustomizarLabel(Label label, string texto, Color colorTexto, int tamanoFuente)
+        {
+            label.Text = texto;
+            label.Font = new Font("Arial", tamanoFuente, FontStyle.Bold);
+            label.ForeColor = colorTexto;
+        }
+
+        // Validaciones de los Campos
+
+        private void tbx_NombreCliente_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Validar que solo se admitan letras
+            if (!char.IsLetter(e.KeyChar) && !char.IsControl(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void tbx_NumeroCliente_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Permitir borrar caracteres si se presiona la tecla "Backspace"
+            if (e.KeyChar == (char)Keys.Back)
+            {
+                return;
+            }
+
+            // Validar que solo se admitan números y un máximo de 9 dígitos
+            if (!char.IsDigit(e.KeyChar) || tbx_NumeroCliente.Text.Length >= 9)
+            {
+                e.Handled = true;
+            }
+        }
+        private void comboBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Evitar la entrada de texto en el ComboBox
+            e.Handled = true;
+        }
+
+        private void tbx_Rut_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Validar que solo se admitan números, guion y la letra 'K' (mayúscula o minúscula)
+            if (!char.IsDigit(e.KeyChar) && e.KeyChar != '-' && !(char.ToUpper(e.KeyChar) == 'K') && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true;
+                return;
+            }
+
+            // Convertir una 'k' minúscula ingresada a mayúscula
+            if (char.ToLower(e.KeyChar) == 'k')
+            {
+                e.KeyChar = 'K';
+            }
+
+            // Verificar si el guion ya está presente en el texto
+            bool guionPresente = tbx_Rut.Text.Contains("-");
+
+            // Validar el máximo de 8 dígitos antes del guion
+            if (!guionPresente && char.IsDigit(e.KeyChar) && tbx_Rut.Text.Length >= 8)
+            {
+                e.Handled = true;
+                return;
+            }
+
+            // Validar el máximo de 1 dígito o letra después del guion
+            if (guionPresente && tbx_Rut.Text.Substring(tbx_Rut.Text.IndexOf("-")).Length >= 2 && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true;
+                return;
+            }
+
+            // Agregar el número o letra ingresada
+            if ((char.IsDigit(e.KeyChar) && !guionPresente) || char.ToUpper(e.KeyChar) == 'K')
+            {
+                tbx_Rut.Text += e.KeyChar;
+                e.Handled = true; // Evitar que se ingrese el carácter directamente en el textbox
+            }
+
+            // Mover el cursor al final del texto
+            tbx_Rut.SelectionStart = tbx_Rut.Text.Length;
+
+            // Formatear el Rut según la estructura especificada
+            if (e.KeyChar == '-')
+            {
+                FormatearRut();
+                e.Handled = true; // Evitar que se ingrese el guion directamente en el textbox
+            }
+            else if (e.KeyChar == (char)Keys.Back) // Borrar
+            {
+                if (tbx_Rut.Text.EndsWith("-"))
+                {
+                    tbx_Rut.Text = tbx_Rut.Text.Replace(".", "");
+                    tbx_Rut.Text = tbx_Rut.Text.Substring(0, tbx_Rut.Text.Length - 1);
+                }
+                else if (tbx_Rut.Text.Length > 0)
+                {
+                    tbx_Rut.Text = tbx_Rut.Text.Remove(tbx_Rut.Text.Length - 1);
+                }
+
+                // Mover el cursor al final del texto después de borrar
+                tbx_Rut.SelectionStart = tbx_Rut.Text.Length;
+
+                e.Handled = true; // Evitar que se ejecute el comportamiento predeterminado del retroceso
+            }
+        }
+
+        private void FormatearRut()
+        {
+            string rut = tbx_Rut.Text.Replace(".", "").Replace("-", "");
+
+            if (rut.Length == 7)
+            {
+                rut = $"{rut.Substring(0, 1)}.{rut.Substring(1, 3)}.{rut.Substring(4, 3)}-";
+            }
+            else if (rut.Length == 8)
+            {
+                rut = $"{rut.Substring(0, 2)}.{rut.Substring(2, 3)}.{rut.Substring(5, 3)}-";
+            }
+
+            tbx_Rut.Text = rut;
+
+            // Mover el cursor al final del texto después de formatear
+            tbx_Rut.SelectionStart = tbx_Rut.Text.Length;
         }
     }
 }
