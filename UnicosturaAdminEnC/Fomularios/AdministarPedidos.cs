@@ -121,6 +121,15 @@ namespace UnicosturaAdminEnC
 
         private void btn_Agregar_Click(object sender, EventArgs e)
         {
+
+            if (tbx_IdCliente.Text == "0" && cbx_NombreCliente.Text == "")
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El pedido Debe de Tener algun Cliente. Asignele un nombre y un numero al Cliente",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
             // Variables del Cliente
             int idCliente = int.Parse(tbx_IdCliente.Text);
             string nombreCliente = cbx_NombreCliente.Text;
@@ -146,7 +155,7 @@ namespace UnicosturaAdminEnC
             DateTime fecha = dateTimePicker1.Value;
 
             // Verificar si el cliente ya existe en la base de datos por su IdCliente
-            if (idCliente != -1)
+            if (idCliente != 0)
             {
 
                 int idEstado = FuncionesAgregar.AgregarEstado(impreso, pagado, boleta, entregado);
@@ -356,22 +365,53 @@ namespace UnicosturaAdminEnC
 
         public void LimpiarDatosCliente()
         {
-            tbx_IdCliente.Text = "-1";
+            tbx_IdCliente.Text = "0";
             cbx_NombreCliente.SelectedIndex = -1;
-            cbx_CelularCliente.SelectedIndex = -1;
+            cbx_CelularCliente.Text = "0";
+            cbx_Alias.SelectedIndex = -1;
+            cbx_Rut.SelectedIndex = -1;
+            tbx_Fuente.SelectedIndex = -1;
+            tbx_Direccion.Text = string.Empty;
+
+            tbx_IdCliente.Text = "0";
+            cbx_NombreCliente.SelectedIndex = -1;
+            cbx_CelularCliente.Text = "0";
             cbx_Alias.SelectedIndex = -1;
             cbx_Rut.SelectedIndex = -1;
             tbx_Fuente.SelectedIndex = -1;
             tbx_Direccion.Text = string.Empty;
         }
 
-        private void AdministarPedidos_Load(object sender, EventArgs e)
+        public void AdministarPedidos_Load(object sender, EventArgs e)
         {
+            LimpiarDatosCliente();
             // Obtener los datos de la tabla "PedidoMolde"
             List<PedidoMolde> pedidos = ObtenerPedidos();
 
             // Enlazar los datos al DataGridView
             dataGridView1.DataSource = pedidos;
+
+            dataGridView1.Columns["IdPedido"].DisplayIndex = 0;
+            dataGridView1.Columns["IdCliente"].DisplayIndex = 1;
+            dataGridView1.Columns["IdDistribucion"].DisplayIndex = 2;
+            dataGridView1.Columns["IdPago"].DisplayIndex = 3;
+            dataGridView1.Columns["IdRepartidor"].DisplayIndex = 4;
+            dataGridView1.Columns["TotalMoldes"].DisplayIndex = 5;
+            dataGridView1.Columns["ValorPedido"].DisplayIndex = 6;
+            dataGridView1.Columns["NumBoletaImpresa"].DisplayIndex = 7;
+            dataGridView1.Columns["Fecha"].DisplayIndex = 8;
+            dataGridView1.Columns["IdEstado"].DisplayIndex = 9;
+
+            dataGridView1.Columns[0].HeaderText = "ID Pedido";
+            dataGridView1.Columns[1].HeaderText = "Cliente";
+            dataGridView1.Columns[2].HeaderText = "ID Estado";
+            dataGridView1.Columns[3].HeaderText = "Repartidor";
+            dataGridView1.Columns[4].HeaderText = "Distribucion";
+            dataGridView1.Columns[5].HeaderText = "Tipo de Pago";
+            dataGridView1.Columns[6].HeaderText = "Total de Moldes";
+            dataGridView1.Columns[7].HeaderText = "Valor del Pedido";
+            dataGridView1.Columns[8].HeaderText = "Numero de Boleta";
+            dataGridView1.Columns[9].HeaderText = "Fecha";
         }
 
         // Método para obtener los datos de la tabla "PedidoMolde"
@@ -425,6 +465,14 @@ namespace UnicosturaAdminEnC
         {
             int idCliente = int.Parse(tbx_IdCliente.Text);
 
+            if (tbx_IdCliente.Text == "0")
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("Debe de Tener Seleccionado a un Cliente para Buscar sus pedidos",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
             DataTable dtCliente = FuncionesBuscar.BuscarPedido(idCliente);
 
             dataGridView1.DataSource = dtCliente;
@@ -432,9 +480,32 @@ namespace UnicosturaAdminEnC
 
         private void btn_Eliminar_Click(object sender, EventArgs e)
         {
-            int idEstado = int.Parse(tbx_IdEstados.Text);
-            FuncionesEliminar.EliminarPedido(idEstado);
-            AdministarPedidos_Load(sender, e);
+
+            if (tbx_IdPedido.Text == "")
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("Debe de Seleccionar a un pedido para Eliminarlo, haga doble click uno de los pedidos de la grilla",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
+            int idEstado = int.Parse(tbx_IdPedido.Text);
+
+            DialogResult resultado = MessageBox.Show("¿Estás seguro de que deseas eliminar al pedido numero" + idEstado + "?",
+                                     "Confirmar eliminación",
+                                     MessageBoxButtons.YesNo,
+                                     MessageBoxIcon.Question);
+
+            if (resultado == DialogResult.Yes)
+            {
+                FuncionesEliminar.EliminarPedido(idEstado);
+                AdministarPedidos_Load(sender, e);
+            }
+            else
+            {
+                return;
+            }
+
         }
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -632,6 +703,23 @@ namespace UnicosturaAdminEnC
 
         private void btn_Modificar_Click(object sender, EventArgs e)
         {
+
+            if (tbx_IdPedido.Text == "")
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El pedido Debe de estar Seleccionado para Modificarlo. Seleccione uno desde la Grilla",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
+            if (tbx_IdCliente.Text == "0")
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El pedido Debe de Tener algun Cliente. Asignele un nombre y un numero al Cliente",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
             // Variables del Cliente
             int idCliente = int.Parse(tbx_IdCliente.Text);
             string nombreCliente = cbx_NombreCliente.Text;
@@ -759,25 +847,185 @@ namespace UnicosturaAdminEnC
             DataGridViewCell selectedCell = dataGridView1.SelectedCells[0];
             int rowIndex = selectedCell.RowIndex;
             DataGridViewRow selectedRow = dataGridView1.Rows[rowIndex];
-            int idEstado = Convert.ToInt32(selectedRow.Cells["IdEstado"].Value);
+            int idEstado = Convert.ToInt32(selectedRow.Cells["IdPedido"].Value);
 
-            FuncionesEliminar.EliminarPedido(idEstado);
+            DialogResult resultado = MessageBox.Show("¿Estás seguro de que deseas eliminar al pedido numero" + idEstado + "?",
+                         "Confirmar eliminación",
+                         MessageBoxButtons.YesNo,
+                         MessageBoxIcon.Question);
 
-            AdministarPedidos_Load(sender, e);
+            if (resultado == DialogResult.Yes)
+            {
+                FuncionesEliminar.EliminarPedido(idEstado);
+                AdministarPedidos_Load(sender, e);
+            }
+            else
+            {
+                return;
+            }
         }
 
         private AdministarDetallesPedido administarDetallesPedido;
 
         private void btn_AdminMoldesPedido_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(tbx_IdPedido.Text))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("No tiene ningun pedido Seleccionado, Haga Doble Click en el Pedido en la Grilla que desea Administar.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
             int idPedido = int.Parse(tbx_IdPedido.Text);
 
             if (administarDetallesPedido == null)
             {
-                administarDetallesPedido = new AdministarDetallesPedido(idPedido);
+                administarDetallesPedido = new AdministarDetallesPedido(idPedido, this);
                 administarDetallesPedido.FormClosed += (s, args) => administarDetallesPedido = null; // Esto permite liberar la instancia cuando se cierra el formulario
             }
             administarDetallesPedido.Show();
+        }
+
+        private void cbx_IdDistribucion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.ColumnIndex == dataGridView1.Columns["IdDistribucion"].Index)
+            {
+                int idDistribucion = Convert.ToInt32(e.Value);
+                string nombreDistribucion = ObtenerNombreDistribucion(idDistribucion);
+                e.Value = nombreDistribucion;
+            }
+            else if (e.ColumnIndex == dataGridView1.Columns["IdPago"].Index)
+            {
+                int idPago = Convert.ToInt32(e.Value);
+                string nombrePago = ObtenerNombrePago(idPago);
+                e.Value = nombrePago;
+            }
+            else if (e.ColumnIndex == dataGridView1.Columns["IdCliente"].Index)
+            {
+                int idCliente = Convert.ToInt32(e.Value);
+                string nombreCliente = ObtenerNombreCliente(idCliente);
+                e.Value = nombreCliente;
+            }
+            else if (e.ColumnIndex == dataGridView1.Columns["IdRepartidor"].Index)
+            {
+                int idRepartidor = Convert.ToInt32(e.Value);
+                string nombreRepartidor = ObtenerNombreRepartidor(idRepartidor);
+                e.Value = nombreRepartidor;
+            }
+        }
+
+        private string ObtenerNombreDistribucion(int idDistribucion)
+        {
+            string nombreDistribucion = string.Empty;
+
+            using (SQLiteConnection conn = new SQLiteConnection(connection))
+            {
+                conn.Open();
+
+                using (SQLiteCommand cmd = new SQLiteCommand("SELECT NombreDistribucio FROM Distribucion WHERE IdDistribucion = @IdDistribucion", conn))
+                {
+                    cmd.Parameters.AddWithValue("@IdDistribucion", idDistribucion);
+
+                    using (SQLiteDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            nombreDistribucion = reader["NombreDistribucio"].ToString();
+                        }
+                    }
+                }
+
+                conn.Close();
+            }
+
+            return nombreDistribucion;
+        }
+
+        private string ObtenerNombrePago(int idPago)
+        {
+            string nombrePago = string.Empty;
+
+            using (SQLiteConnection conn = new SQLiteConnection(connection))
+            {
+                conn.Open();
+
+                using (SQLiteCommand cmd = new SQLiteCommand("SELECT NombrePago FROM TipoPago WHERE IdPago = @IdPago", conn))
+                {
+                    cmd.Parameters.AddWithValue("@IdPago", idPago);
+
+                    using (SQLiteDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            nombrePago = reader["NombrePago"].ToString();
+                        }
+                    }
+                }
+
+                conn.Close();
+            }
+
+            return nombrePago;
+        }
+
+        private string ObtenerNombreCliente(int idCliente)
+        {
+            string nombreBoleta = string.Empty;
+
+            using (SQLiteConnection conn = new SQLiteConnection(connection))
+            {
+                conn.Open();
+
+                using (SQLiteCommand cmd = new SQLiteCommand("SELECT NombreCliente FROM Cliente WHERE IdCliente = @IdCliente", conn))
+                {
+                    cmd.Parameters.AddWithValue("@IdCliente", idCliente);
+
+                    using (SQLiteDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            nombreBoleta = reader["NombreCliente"].ToString();
+                        }
+                    }
+                }
+
+                conn.Close();
+            }
+
+            return nombreBoleta;
+        }
+
+        private string ObtenerNombreRepartidor(int idRepartidor)
+        {
+            string nombreRepartidor = string.Empty;
+
+            using (SQLiteConnection conn = new SQLiteConnection(connection))
+            {
+                conn.Open();
+
+                using (SQLiteCommand cmd = new SQLiteCommand("SELECT NombreRepartidor FROM Repartidor WHERE IdRepartidor = @IdRepartidor", conn))
+                {
+                    cmd.Parameters.AddWithValue("@IdRepartidor", idRepartidor);
+
+                    using (SQLiteDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            nombreRepartidor = reader["NombreRepartidor"].ToString();
+                        }
+                    }
+                }
+
+                conn.Close();
+            }
+
+            return nombreRepartidor;
         }
     }
 }

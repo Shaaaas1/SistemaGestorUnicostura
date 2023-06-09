@@ -312,7 +312,6 @@ namespace UnicosturaAdminEnC
             AdministrarClientes_Load(sender, e);
 
             // Personalizar la apariencia de la ventana
-            this.BackColor = Color.FromArgb(240, 240, 240);
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
 
@@ -326,15 +325,6 @@ namespace UnicosturaAdminEnC
             CustomizarBoton(btn_Eliminar, "Eliminar", Color.FromArgb(192, 192, 192), Color.Black, 12);
             CustomizarBoton(btn_EliminardeGrilla, "Eliminar de Grilla", Color.FromArgb(192, 192, 192), Color.Black, 12);
             CustomizarBoton(btn_Actualizar, "Actualizar", Color.FromArgb(192, 192, 192), Color.Black, 12);
-
-            // Personalizar el estilo de los labels
-            CustomizarLabel(label1, "ID Cliente", Color.FromArgb(64, 64, 64), 12);
-            CustomizarLabel(label2, "Nombre", Color.FromArgb(64, 64, 64), 12);
-            CustomizarLabel(label3, "Contacto", Color.FromArgb(64, 64, 64), 12);
-            CustomizarLabel(label4, "Dirección", Color.FromArgb(64, 64, 64), 12);
-            CustomizarLabel(label5, "Rut", Color.FromArgb(64, 64, 64), 12);
-            CustomizarLabel(label6, "Alias", Color.FromArgb(64, 64, 64), 12);
-            CustomizarLabel(label7, "Fuente", Color.FromArgb(64, 64, 64), 12);
         }
 
         private void CustomizarBoton(Button boton, string texto, Color colorFondo, Color colorTexto, int tamanoFuente)
@@ -474,6 +464,11 @@ namespace UnicosturaAdminEnC
 
             // Mover el cursor al final del texto después de formatear
             tbx_Rut.SelectionStart = tbx_Rut.Text.Length;
+        }
+
+        private void tbx_Direccion_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

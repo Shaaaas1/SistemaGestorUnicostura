@@ -71,9 +71,7 @@ namespace UnicosturaAdminEnC
         private void FormInicio_Load(object sender, EventArgs e)
         {
             // Personalizar la apariencia de la ventana
-            this.BackColor = Color.FromArgb(240, 240, 240);
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
 
             // Desactivar la transparencia en el formulario
             this.TransparencyKey = Color.Empty;

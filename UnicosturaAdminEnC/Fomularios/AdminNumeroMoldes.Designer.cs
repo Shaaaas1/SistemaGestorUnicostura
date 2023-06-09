@@ -45,50 +45,55 @@
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(12, 154);
+            this.dataGridView1.Location = new System.Drawing.Point(12, 165);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(503, 145);
+            this.dataGridView1.Size = new System.Drawing.Size(422, 134);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellDoubleClick_1);
             // 
             // tbx_NombreMolde
             // 
-            this.tbx_NombreMolde.Location = new System.Drawing.Point(136, 40);
+            this.tbx_NombreMolde.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbx_NombreMolde.Location = new System.Drawing.Point(16, 31);
             this.tbx_NombreMolde.Name = "tbx_NombreMolde";
-            this.tbx_NombreMolde.Size = new System.Drawing.Size(100, 20);
+            this.tbx_NombreMolde.Size = new System.Drawing.Size(164, 26);
             this.tbx_NombreMolde.TabIndex = 1;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(34, 43);
+            this.label1.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(81, 13);
+            this.label1.Size = new System.Drawing.Size(135, 19);
             this.label1.TabIndex = 2;
-            this.label1.Text = "Nombre Moldes";
+            this.label1.Text = "Nombre Moldes:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(34, 71);
+            this.label2.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(12, 66);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(96, 13);
+            this.label2.Size = new System.Drawing.Size(158, 19);
             this.label2.TabIndex = 3;
-            this.label2.Text = "Numero de Moldes";
+            this.label2.Text = "Numero de Moldes:";
             // 
             // tbx_NumeroMoldes
             // 
-            this.tbx_NumeroMoldes.Location = new System.Drawing.Point(136, 68);
+            this.tbx_NumeroMoldes.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbx_NumeroMoldes.Location = new System.Drawing.Point(16, 93);
             this.tbx_NumeroMoldes.Name = "tbx_NumeroMoldes";
-            this.tbx_NumeroMoldes.Size = new System.Drawing.Size(100, 20);
+            this.tbx_NumeroMoldes.Size = new System.Drawing.Size(164, 26);
             this.tbx_NumeroMoldes.TabIndex = 4;
             // 
             // btn_Agregar
             // 
-            this.btn_Agregar.Location = new System.Drawing.Point(242, 40);
+            this.btn_Agregar.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_Agregar.Location = new System.Drawing.Point(190, 27);
             this.btn_Agregar.Name = "btn_Agregar";
-            this.btn_Agregar.Size = new System.Drawing.Size(75, 23);
+            this.btn_Agregar.Size = new System.Drawing.Size(90, 30);
             this.btn_Agregar.TabIndex = 5;
             this.btn_Agregar.Text = "Agregar";
             this.btn_Agregar.UseVisualStyleBackColor = true;
@@ -96,9 +101,10 @@
             // 
             // btn_Eliminar
             // 
-            this.btn_Eliminar.Location = new System.Drawing.Point(404, 40);
+            this.btn_Eliminar.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_Eliminar.Location = new System.Drawing.Point(190, 129);
             this.btn_Eliminar.Name = "btn_Eliminar";
-            this.btn_Eliminar.Size = new System.Drawing.Size(75, 23);
+            this.btn_Eliminar.Size = new System.Drawing.Size(90, 30);
             this.btn_Eliminar.TabIndex = 6;
             this.btn_Eliminar.Text = "Eliminar";
             this.btn_Eliminar.UseVisualStyleBackColor = true;
@@ -106,9 +112,10 @@
             // 
             // btn_Modificar
             // 
-            this.btn_Modificar.Location = new System.Drawing.Point(242, 66);
+            this.btn_Modificar.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_Modificar.Location = new System.Drawing.Point(286, 66);
             this.btn_Modificar.Name = "btn_Modificar";
-            this.btn_Modificar.Size = new System.Drawing.Size(75, 23);
+            this.btn_Modificar.Size = new System.Drawing.Size(148, 30);
             this.btn_Modificar.TabIndex = 7;
             this.btn_Modificar.Text = "Modificar";
             this.btn_Modificar.UseVisualStyleBackColor = true;
@@ -116,9 +123,10 @@
             // 
             // btn_Actualizar
             // 
-            this.btn_Actualizar.Location = new System.Drawing.Point(12, 125);
+            this.btn_Actualizar.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_Actualizar.Location = new System.Drawing.Point(12, 129);
             this.btn_Actualizar.Name = "btn_Actualizar";
-            this.btn_Actualizar.Size = new System.Drawing.Size(75, 23);
+            this.btn_Actualizar.Size = new System.Drawing.Size(102, 30);
             this.btn_Actualizar.TabIndex = 8;
             this.btn_Actualizar.Text = "Actualizar";
             this.btn_Actualizar.UseVisualStyleBackColor = true;
@@ -126,9 +134,10 @@
             // 
             // btn_EliminarDeGrilla
             // 
-            this.btn_EliminarDeGrilla.Location = new System.Drawing.Point(419, 125);
+            this.btn_EliminarDeGrilla.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_EliminarDeGrilla.Location = new System.Drawing.Point(286, 129);
             this.btn_EliminarDeGrilla.Name = "btn_EliminarDeGrilla";
-            this.btn_EliminarDeGrilla.Size = new System.Drawing.Size(96, 23);
+            this.btn_EliminarDeGrilla.Size = new System.Drawing.Size(148, 30);
             this.btn_EliminarDeGrilla.TabIndex = 9;
             this.btn_EliminarDeGrilla.Text = "Eliminar de Grilla";
             this.btn_EliminarDeGrilla.UseVisualStyleBackColor = true;
@@ -136,9 +145,10 @@
             // 
             // btn_Buscar
             // 
-            this.btn_Buscar.Location = new System.Drawing.Point(323, 40);
+            this.btn_Buscar.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_Buscar.Location = new System.Drawing.Point(286, 27);
             this.btn_Buscar.Name = "btn_Buscar";
-            this.btn_Buscar.Size = new System.Drawing.Size(75, 23);
+            this.btn_Buscar.Size = new System.Drawing.Size(148, 30);
             this.btn_Buscar.TabIndex = 10;
             this.btn_Buscar.Text = "Buscar";
             this.btn_Buscar.UseVisualStyleBackColor = true;
@@ -148,7 +158,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(527, 311);
+            this.BackColor = System.Drawing.Color.Goldenrod;
+            this.ClientSize = new System.Drawing.Size(446, 311);
             this.Controls.Add(this.btn_Buscar);
             this.Controls.Add(this.btn_EliminarDeGrilla);
             this.Controls.Add(this.btn_Actualizar);

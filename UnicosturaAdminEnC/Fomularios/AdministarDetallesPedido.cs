@@ -9,17 +9,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using UnicosturaAdminEnC.Clases;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 
 namespace UnicosturaAdminEnC
 {
     
     public partial class AdministarDetallesPedido : Form
     {
-        public AdministarDetallesPedido(int idPedido)
+        private AdministarPedidos administarPedidos;
+        public AdministarDetallesPedido(int idPedido, AdministarPedidos administarPedidos)
         {
             InitializeComponent();
             tbx_IdPedido.Text = idPedido.ToString();
             RellenarCbxTallas();
+            this.administarPedidos = administarPedidos;
         }
 
         private static SQLiteConnection connection = new SQLiteConnection("Data Source=pedidos.db;Version=3;");
@@ -41,12 +44,219 @@ namespace UnicosturaAdminEnC
         {
             int IdPedido = int.Parse(tbx_IdPedido.Text);
             int IdTalla = Convert.ToInt32(cbx_IdTalla.SelectedValue);
-            int CodigoMolde = int.Parse(tbx_CodigoMolde.Text);
             bool MoldeEnStock = chbx_MoldeEnStock.Checked;
             bool MoldeFallido = chbx_MoldeFallido.Checked;
+            bool PrecioVariable = chbx_PrecioVariable.Checked;
+            bool PrecioEspecial = chbx_PrecioEspecial.Checked;
 
-            FuncionesAgregar.AgregarDetallePedidoMoldes(IdPedido, IdTalla, CodigoMolde, MoldeEnStock, MoldeFallido);
-            AdministrarDetallePedidos_Load(sender, e);
+            if (string.IsNullOrEmpty(tbx_CodigoMolde.Text))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Codigo Molde no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
+            int CodigoMolde = int.Parse(tbx_CodigoMolde.Text);
+
+
+            FuncionesAgregar.AgregarDetallePedidoMoldes(IdPedido, IdTalla, CodigoMolde, MoldeEnStock, MoldeFallido, PrecioVariable, PrecioEspecial);
+
+            using (SQLiteConnection conn = new SQLiteConnection(connection))
+            {
+
+                conn.Open();
+
+                int PrecioNormalDeTabla = 0;
+                int PrecioVariableDeTabla = 0;
+                int PrecioEspecialDeTabla = 0;
+                int TotalMoldesDeTabla = 0;
+                int ValorPedidoDeTabla = 0;
+                int ImprimirDeTabla = 0;
+                int StockDeTabla = 0;
+                int FallidoDeTabla = 0;
+
+
+                using (SQLiteCommand cmd = new SQLiteCommand("SELECT NumeroMoldes FROM Moldes WHERE NombreMoldes = 'PrecioNormal'", conn))
+                {
+                    object result = cmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        PrecioNormalDeTabla = Convert.ToInt32(result);
+                    }
+                    
+                }
+
+                using (SQLiteCommand cmd = new SQLiteCommand("SELECT NumeroMoldes FROM Moldes WHERE NombreMoldes = 'PrecioVariable'", conn))
+                {
+                    object result = cmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        PrecioVariableDeTabla = Convert.ToInt32(result);
+                    }
+                }
+
+                using (SQLiteCommand cmd = new SQLiteCommand("SELECT NumeroMoldes FROM Moldes WHERE NombreMoldes = 'PrecioEspecial'", conn))
+                {
+                    object result = cmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        PrecioEspecialDeTabla = Convert.ToInt32(result);
+                    }
+                }
+
+                using (SQLiteCommand cmd = new SQLiteCommand("SELECT TotalMoldes FROM PedidoMolde WHERE IdPedido = @IdPedido", conn))
+                {
+                    cmd.Parameters.AddWithValue("@IdPedido", IdPedido);
+                    object result = cmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        TotalMoldesDeTabla = Convert.ToInt32(result);
+                        
+                    }
+                }
+
+                using (SQLiteCommand cmd = new SQLiteCommand("SELECT ValorPedido FROM PedidoMolde WHERE IdPedido = @IdPedido", conn))
+                {
+                    cmd.Parameters.AddWithValue("@IdPedido", IdPedido);
+                    object result = cmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        ValorPedidoDeTabla = Convert.ToInt32(result);
+                        
+                    }
+                }
+
+                using (SQLiteCommand cmd = new SQLiteCommand("SELECT NumeroMoldes FROM Moldes WHERE NombreMoldes = 'Imprimir'", conn))
+                {
+                    object result = cmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        ImprimirDeTabla = Convert.ToInt32(result);
+                    }
+                }
+
+                using (SQLiteCommand cmd = new SQLiteCommand("SELECT NumeroMoldes FROM Moldes WHERE NombreMoldes = 'Stock'", conn))
+                {
+                    object result = cmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        StockDeTabla = Convert.ToInt32(result);
+                    }
+                }
+
+                using (SQLiteCommand cmd = new SQLiteCommand("SELECT NumeroMoldes FROM Moldes WHERE NombreMoldes = 'Fallido'", conn))
+                {
+                    object result = cmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        FallidoDeTabla = Convert.ToInt32(result);
+                        
+                    }
+                }
+
+                int NuevoStock = 0;
+                int NuevoFallido = 0;
+
+                int NuevoValorPedido = 0;
+                int NuevoTotalMoldes = TotalMoldesDeTabla + 1;
+
+                if (MoldeEnStock == true)
+                {
+                    NuevoStock = StockDeTabla + 1;
+
+                    // Crear el comando SQL para modificar el PedidoMolde
+                    string sql = "UPDATE Moldes SET NumeroMoldes = @NuevoStock WHERE NombreMoldes = 'Stock'";
+                    using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                    {
+                        // Asignar los valores a los parámetros del comando
+                        cmd.Parameters.AddWithValue("@NuevoStock", NuevoStock);
+
+                        // Ejecutar el comando de modificación
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                    }
+                }
+
+                if (MoldeFallido == true)
+                {
+                    NuevoFallido = FallidoDeTabla + 1;
+
+                    // Crear el comando SQL para modificar el PedidoMolde
+                    string sql = "UPDATE Moldes SET NumeroMoldes = @NuevoFallido WHERE NombreMoldes = 'Fallido'";
+                    using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                    {
+                        // Asignar los valores a los parámetros del comando
+                        cmd.Parameters.AddWithValue("@NuevoFallido", NuevoFallido);
+
+                        // Ejecutar el comando de modificación
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                    }
+                }
+
+
+                if (PrecioVariable == false && PrecioEspecial == false)
+                {
+                    NuevoValorPedido = PrecioNormalDeTabla + ValorPedidoDeTabla;
+                }
+
+                if (PrecioVariable == true )
+                {
+                    NuevoValorPedido = PrecioVariableDeTabla + ValorPedidoDeTabla;
+                }
+
+                if ( PrecioEspecial == true)
+                {
+                    NuevoValorPedido = PrecioEspecialDeTabla + ValorPedidoDeTabla;
+                }
+
+
+                // Crear el comando SQL para modificar el PedidoMolde
+                string sql2 = "UPDATE PedidoMolde SET totalMoldes = @totalMoldes WHERE IdPedido = @IdPedido";
+                using (SQLiteCommand cmd = new SQLiteCommand(sql2, conn))
+                {
+                    // Asignar los valores a los parámetros del comando
+                    cmd.Parameters.AddWithValue("@totalMoldes", NuevoTotalMoldes);
+                    cmd.Parameters.AddWithValue("@IdPedido", IdPedido);
+
+                    // Ejecutar el comando de modificación
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                }
+
+                if (MoldeFallido == false)
+                {
+                    string sql = "UPDATE PedidoMolde SET valorPedido = @valorPedido WHERE IdPedido = @IdPedido";
+                    using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                    {
+                        // Asignar los valores a los parámetros del comando
+                        cmd.Parameters.AddWithValue("@valorPedido", NuevoValorPedido);
+                        cmd.Parameters.AddWithValue("@IdPedido", IdPedido);
+
+                        // Ejecutar el comando de modificación
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                    }
+                }
+
+                if (MoldeEnStock == false)
+                {
+                    int NuevoImprimir = ImprimirDeTabla - 1;
+
+                    string sql = "UPDATE Moldes SET NumeroMoldes = @NuevoImprimir WHERE NombreMoldes = 'Imprimir'";
+                    using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                    {
+                        // Asignar los valores a los parámetros del comando
+                        cmd.Parameters.AddWithValue("@NuevoImprimir", NuevoImprimir);
+
+                        // Ejecutar el comando de modificación
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                    }
+                }
+
+                conn.Close();
+
+            }
+
+             AdministrarDetallePedidos_Load(sender, e);
+             administarPedidos.AdministarPedidos_Load(sender, e);
         }
 
         private void AdministrarDetallePedidos_Load(object sender, EventArgs e)
@@ -56,6 +266,26 @@ namespace UnicosturaAdminEnC
 
             // Enlazar los datos al DataGridView
             dataGridView1.DataSource = detallesPedido;
+
+            dataGridView1.Columns["IdDetallePedido"].DisplayIndex = 0;
+            dataGridView1.Columns["IdPedido"].DisplayIndex = 1;
+            dataGridView1.Columns["CodigoMolde"].DisplayIndex = 2;
+            dataGridView1.Columns["IdTalla"].DisplayIndex = 3;
+            dataGridView1.Columns["MoldeEnStock"].DisplayIndex = 4;
+            dataGridView1.Columns["MoldeFallido"].DisplayIndex = 5;
+            dataGridView1.Columns["PrecioVariable"].DisplayIndex = 6;
+            dataGridView1.Columns["PrecioEspecial"].DisplayIndex = 7;
+
+            dataGridView1.Columns[0].HeaderText = "ID Detalle";
+            dataGridView1.Columns[1].HeaderText = "ID Pedido";
+            dataGridView1.Columns[2].HeaderText = "Talla";
+            dataGridView1.Columns[3].HeaderText = "Codigo";
+            dataGridView1.Columns[4].HeaderText = "Molde En Stock";
+            dataGridView1.Columns[5].HeaderText = "Molde Fallido";
+            dataGridView1.Columns[6].HeaderText = "Precio Variable";
+            dataGridView1.Columns[7].HeaderText = "Precio Especial";
+
+
         }
 
         // Método para obtener los datos de la tabla "DetallePedidoMoldes"
@@ -85,10 +315,13 @@ namespace UnicosturaAdminEnC
                                 IdTalla = Convert.ToInt32(reader["IdTalla"]),
                                 CodigoMolde = Convert.ToInt32(reader["CodigoMolde"]),
                                 MoldeEnStock = Convert.ToBoolean(reader["MoldeEnStock"]),
-                                MoldeFallido = Convert.ToBoolean(reader["MoldeFallido"])
+                                MoldeFallido = Convert.ToBoolean(reader["MoldeFallido"]),
+                                PrecioVariable = Convert.ToBoolean(reader["PrecioVariable"]),
+                                PrecioEspecial = Convert.ToBoolean(reader["PrecioEspecial"])
                             };
 
                             detallesPedido.Add(detallePedido);
+
                         }
                     }
                 }
@@ -101,6 +334,15 @@ namespace UnicosturaAdminEnC
 
         private void btn_Buscar_Click(object sender, EventArgs e)
         {
+
+            if (string.IsNullOrEmpty(tbx_CodigoMolde.Text))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Codigo Molde no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
             int CodigoMolde = int.Parse(tbx_CodigoMolde.Text);
 
             DataTable dtDetallePedido = FuncionesBuscar.BuscarDetallePedido(CodigoMolde);
@@ -110,48 +352,7 @@ namespace UnicosturaAdminEnC
 
         private void btn_Modificar_Click(object sender, EventArgs e)
         {
-            // Obtener los valores ingresados en los campos de texto
-            int idDetallePedido = int.Parse(tbx_IdDetallePedido.Text);
-            int idPedido = int.Parse(tbx_IdPedido.Text);
-            int idTalla = Convert.ToInt32(cbx_IdTalla.SelectedValue);
-            int codigoMolde = int.Parse(tbx_CodigoMolde.Text);
-            bool moldeEnStock = chbx_MoldeEnStock.Checked;
-            bool moldeFallido = chbx_MoldeFallido.Checked;
 
-            // Crear la conexión a la base de datos
-            using (SQLiteConnection conn = new SQLiteConnection(connection))
-            {
-                conn.Open();
-
-                // Crear el comando SQL para modificar el registro
-                string sql = "UPDATE DetallePedidoMoldes SET IdPedido = @IdPedido, IdTalla = @IdTalla, CodigoMolde = @CodigoMolde, MoldeEnStock = @MoldeEnStock, MoldeFallido = @MoldeFallido WHERE IdDetallePedido = @IdDetallePedido";
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
-                {
-                    // Asignar los valores a los parámetros del comando
-                    cmd.Parameters.AddWithValue("@IdPedido", idPedido);
-                    cmd.Parameters.AddWithValue("@IdTalla", idTalla);
-                    cmd.Parameters.AddWithValue("@CodigoMolde", codigoMolde);
-                    cmd.Parameters.AddWithValue("@MoldeEnStock", moldeEnStock);
-                    cmd.Parameters.AddWithValue("@MoldeFallido", moldeFallido);
-                    cmd.Parameters.AddWithValue("@IdDetallePedido", idDetallePedido);
-
-                    // Ejecutar el comando de modificación
-                    int rowsAffected = cmd.ExecuteNonQuery();
-
-                    if (rowsAffected > 0)
-                    {
-                        MessageBox.Show("Registro de Detalle Pedido modificado correctamente.");
-                        // Aquí puedes realizar cualquier acción adicional después de la modificación exitosa.
-                    }
-                    else
-                    {
-                        MessageBox.Show("No se encontró el registro de Detalle Pedido a modificar.");
-                    }
-                }
-
-                conn.Close();
-                AdministrarDetallePedidos_Load(sender, e);
-            }
         }
 
         private void btn_Actualizar_Click(object sender, EventArgs e)
@@ -161,21 +362,236 @@ namespace UnicosturaAdminEnC
 
         private void btn_Eliminar_Click(object sender, EventArgs e)
         {
-            int idDetallePedido = int.Parse(tbx_IdDetallePedido.Text);
-            FuncionesEliminar.EliminarDetallePedido(idDetallePedido);
-            AdministrarDetallePedidos_Load(sender, e);
+            if (string.IsNullOrEmpty(tbx_IdDetallePedido.Text))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("Debe de Seleccionar un Pedido antes de Eliminar, Desde la Grilla Haga Doble Click en el Molde que desea Eliminar primero.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
+            int IdDetallePedido = int.Parse(tbx_IdDetallePedido.Text);
+            int IdPedido = int.Parse(tbx_IdPedido.Text);
+            bool MoldeEnStock = chbx_MoldeEnStock.Checked;
+            bool MoldeFallido = chbx_MoldeFallido.Checked;
+            bool PrecioVariable = chbx_PrecioVariable.Checked;
+            bool PrecioEspecial = chbx_PrecioEspecial.Checked;
+
+            DialogResult resultado = MessageBox.Show("¿Estás seguro de que deseas eliminar al Molde numero" + IdDetallePedido + "?",
+                         "Confirmar eliminación",
+                         MessageBoxButtons.YesNo,
+                         MessageBoxIcon.Question);
+
+            if (resultado == DialogResult.Yes)
+            {
+                using (SQLiteConnection conn = new SQLiteConnection(connection))
+                {
+
+                    conn.Open();
+
+                    int PrecioNormalDeTabla = 0;
+                    int PrecioVariableDeTabla = 0;
+                    int PrecioEspecialDeTabla = 0;
+                    int TotalMoldesDeTabla = 0;
+                    int ValorPedidoDeTabla = 0;
+                    int ImprimirDeTabla = 0;
+                    int StockDeTabla = 0;
+                    int FallidoDeTabla = 0;
+
+
+                    using (SQLiteCommand cmd = new SQLiteCommand("SELECT NumeroMoldes FROM Moldes WHERE NombreMoldes = 'PrecioNormal'", conn))
+                    {
+                        object result = cmd.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            PrecioNormalDeTabla = Convert.ToInt32(result);
+                        }
+
+                    }
+
+                    using (SQLiteCommand cmd = new SQLiteCommand("SELECT NumeroMoldes FROM Moldes WHERE NombreMoldes = 'PrecioVariable'", conn))
+                    {
+                        object result = cmd.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            PrecioVariableDeTabla = Convert.ToInt32(result);
+                        }
+                    }
+
+                    using (SQLiteCommand cmd = new SQLiteCommand("SELECT NumeroMoldes FROM Moldes WHERE NombreMoldes = 'PrecioEspecial'", conn))
+                    {
+                        object result = cmd.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            PrecioEspecialDeTabla = Convert.ToInt32(result);
+                        }
+                    }
+
+                    using (SQLiteCommand cmd = new SQLiteCommand("SELECT TotalMoldes FROM PedidoMolde WHERE IdPedido = @IdPedido", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@IdPedido", IdPedido);
+                        object result = cmd.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            TotalMoldesDeTabla = Convert.ToInt32(result);
+
+                        }
+                    }
+
+                    using (SQLiteCommand cmd = new SQLiteCommand("SELECT ValorPedido FROM PedidoMolde WHERE IdPedido = @IdPedido", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@IdPedido", IdPedido);
+                        object result = cmd.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            ValorPedidoDeTabla = Convert.ToInt32(result);
+
+                        }
+                    }
+
+                    using (SQLiteCommand cmd = new SQLiteCommand("SELECT NumeroMoldes FROM Moldes WHERE NombreMoldes = 'Imprimir'", conn))
+                    {
+                        object result = cmd.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            ImprimirDeTabla = Convert.ToInt32(result);
+                        }
+                    }
+
+                    using (SQLiteCommand cmd = new SQLiteCommand("SELECT NumeroMoldes FROM Moldes WHERE NombreMoldes = 'Stock'", conn))
+                    {
+                        object result = cmd.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            StockDeTabla = Convert.ToInt32(result);
+                        }
+                    }
+
+                    using (SQLiteCommand cmd = new SQLiteCommand("SELECT NumeroMoldes FROM Moldes WHERE NombreMoldes = 'Fallido'", conn))
+                    {
+                        object result = cmd.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            FallidoDeTabla = Convert.ToInt32(result);
+
+                        }
+                    }
+
+                    int NuevoStock = 0;
+                    int NuevoFallido = 0;
+
+                    int NuevoValorPedido = 0;
+                    int NuevoTotalMoldes = TotalMoldesDeTabla - 1;
+
+                    if (MoldeEnStock == true)
+                    {
+                        NuevoStock = StockDeTabla - 1;
+
+                        // Crear el comando SQL para modificar el PedidoMolde
+                        string sql = "UPDATE Moldes SET NumeroMoldes = @NuevoStock WHERE NombreMoldes = 'Stock'";
+                        using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                        {
+                            // Asignar los valores a los parámetros del comando
+                            cmd.Parameters.AddWithValue("@NuevoStock", NuevoStock);
+
+                            // Ejecutar el comando de modificación
+                            int rowsAffected = cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    if (MoldeFallido == true)
+                    {
+                        NuevoFallido = FallidoDeTabla - 1;
+
+                        // Crear el comando SQL para modificar el PedidoMolde
+                        string sql = "UPDATE Moldes SET NumeroMoldes = @NuevoFallido WHERE NombreMoldes = 'Fallido'";
+                        using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                        {
+                            // Asignar los valores a los parámetros del comando
+                            cmd.Parameters.AddWithValue("@NuevoFallido", NuevoFallido);
+
+                            // Ejecutar el comando de modificación
+                            int rowsAffected = cmd.ExecuteNonQuery();
+                        }
+                    }
+
+
+                    if (PrecioVariable == false && PrecioEspecial == false)
+                    {
+                        NuevoValorPedido = ValorPedidoDeTabla - PrecioNormalDeTabla;
+                    }
+
+                    if (PrecioVariable == true)
+                    {
+                        NuevoValorPedido = ValorPedidoDeTabla - PrecioVariableDeTabla;
+                    }
+
+                    if (PrecioEspecial == true)
+                    {
+                        NuevoValorPedido = ValorPedidoDeTabla - PrecioEspecialDeTabla;
+                    }
+
+
+                    // Crear el comando SQL para modificar el PedidoMolde
+                    string sql2 = "UPDATE PedidoMolde SET totalMoldes = @totalMoldes WHERE IdPedido = @IdPedido";
+                    using (SQLiteCommand cmd = new SQLiteCommand(sql2, conn))
+                    {
+                        // Asignar los valores a los parámetros del comando
+                        cmd.Parameters.AddWithValue("@totalMoldes", NuevoTotalMoldes);
+                        cmd.Parameters.AddWithValue("@IdPedido", IdPedido);
+
+                        // Ejecutar el comando de modificación
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                    }
+
+                    if (MoldeFallido == false)
+                    {
+                        string sql = "UPDATE PedidoMolde SET valorPedido = @valorPedido WHERE IdPedido = @IdPedido";
+                        using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                        {
+                            // Asignar los valores a los parámetros del comando
+                            cmd.Parameters.AddWithValue("@valorPedido", NuevoValorPedido);
+                            cmd.Parameters.AddWithValue("@IdPedido", IdPedido);
+
+                            // Ejecutar el comando de modificación
+                            int rowsAffected = cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    if (MoldeEnStock == false)
+                    {
+                        int NuevoImprimir = ImprimirDeTabla + 1;
+
+                        string sql = "UPDATE Moldes SET NumeroMoldes = @NuevoImprimir WHERE NombreMoldes = 'Imprimir'";
+                        using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                        {
+                            // Asignar los valores a los parámetros del comando
+                            cmd.Parameters.AddWithValue("@NuevoImprimir", NuevoImprimir);
+
+                            // Ejecutar el comando de modificación
+                            int rowsAffected = cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    conn.Close();
+
+                }
+
+                int idDetallePedido = int.Parse(tbx_IdDetallePedido.Text);
+                FuncionesEliminar.EliminarDetallePedido(idDetallePedido);
+                AdministrarDetallePedidos_Load(sender, e);
+                administarPedidos.AdministarPedidos_Load(sender, e);
+
+            }
+            else
+            {
+                return;
+            }
+
         }
 
         private void btn_EliminarDeGrilla_Click(object sender, EventArgs e)
         {
-            DataGridViewCell selectedCell = dataGridView1.SelectedCells[0];
-            int rowIndex = selectedCell.RowIndex;
-            DataGridViewRow selectedRow = dataGridView1.Rows[rowIndex];
-            int idDetallePedido = Convert.ToInt32(selectedRow.Cells["IdDetallePedido"].Value);
-
-            FuncionesEliminar.EliminarDetallePedido(idDetallePedido);
-
-            AdministrarDetallePedidos_Load(sender, e);
         }
 
         private void AdministarDetallesPedido_Load(object sender, EventArgs e)
@@ -233,6 +649,149 @@ namespace UnicosturaAdminEnC
 
                         conn.Close();
                     }
+                }
+            }
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tbx_IdDetallePedido_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tbx_IdPedido_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void chbx_MoldeEnStock_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chbx_MoldeEnStock.Checked)
+            {
+                chbx_MoldeFallido.Enabled = false; // Desactiva el checkBox2 si checkBox1 está marcado
+            }
+            else
+            {
+                chbx_MoldeFallido.Enabled = true; // Habilita el checkBox2 si checkBox1 no está marcado
+            }
+        }
+
+        private void chbx_MoldeFallido_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chbx_MoldeFallido.Checked)
+            {
+                chbx_MoldeEnStock.Enabled = false; // Desactiva el checkBox2 si checkBox1 está marcado
+                chbx_PrecioVariable.Enabled = false;
+                chbx_PrecioEspecial.Enabled = false;
+            }
+            else
+            {
+                chbx_MoldeEnStock.Enabled = true; // Habilita el checkBox2 si checkBox1 no está marcado
+                chbx_PrecioVariable.Enabled = true;
+                chbx_PrecioEspecial.Enabled = true;
+            }
+        }
+
+        private void tbx_CodigoMolde_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cbx_IdTalla_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.ColumnIndex == dataGridView1.Columns["IdTalla"].Index && e.Value != null)
+            {
+                int idTalla = (int)e.Value;
+                string nombreTalla = ObtenerNombreTalla(idTalla); // Reemplaza "ObtenerNombreTalla" con tu método para obtener el nombre de la talla según el Id
+
+                e.Value = nombreTalla;
+            }
+        }
+
+        private string ObtenerNombreTalla(int idTalla)
+        {
+            string nombreTalla = string.Empty;
+
+            using (SQLiteConnection conn = new SQLiteConnection(connection))
+            {
+                conn.Open();
+
+                using (SQLiteCommand cmd = new SQLiteCommand("SELECT NombreTalla FROM Talla WHERE IdTalla = @IdTalla", conn))
+                {
+                    cmd.Parameters.AddWithValue("@IdTalla", idTalla);
+
+                    using (SQLiteDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            nombreTalla = reader["NombreTalla"].ToString();
+                        }
+                    }
+                }
+
+                conn.Close();
+            }
+
+            return nombreTalla;
+        }
+
+        private void chbx_PrecioVariable_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chbx_PrecioVariable.Checked)
+            {
+                chbx_MoldeFallido.Enabled = false; // Desactiva el checkBox2 si checkBox1 está marcado
+                chbx_PrecioEspecial.Enabled = false;
+            }
+            else
+            {
+                chbx_PrecioEspecial.Enabled = true; // Activa el checkBox2 si checkBox1 está marcado
+
+                if(!chbx_MoldeEnStock.Checked)
+                {
+                    chbx_MoldeFallido.Enabled = true;
+                }
+                
+            }
+        }
+
+        private void chbx_PrecioEspecial_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chbx_PrecioEspecial.Checked)
+            {
+                chbx_MoldeFallido.Enabled = false; // Desactiva el checkBox2 si checkBox1 está marcado
+                chbx_PrecioVariable.Enabled = false;
+            }
+            else
+            {
+                chbx_PrecioVariable.Enabled = true;
+
+                if (!chbx_MoldeEnStock.Checked)
+                {
+                    chbx_MoldeFallido.Enabled = true;
                 }
             }
         }

@@ -26,6 +26,14 @@ namespace UnicosturaAdminEnC.Fomularios
         {
             string nombreRepartidor = textBox1.Text;
 
+            if (string.IsNullOrEmpty(nombreRepartidor))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Nombre no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
             FuncionesAgregar.AgregarRepartidor(nombreRepartidor);
             AdministarRepartidor_Load(sender, e);
         }
@@ -33,6 +41,14 @@ namespace UnicosturaAdminEnC.Fomularios
         private void btn_Buscar_Click(object sender, EventArgs e)
         {
             string nombreRepartidor = textBox1.Text;
+
+            if (string.IsNullOrEmpty(nombreRepartidor))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Nombre no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
 
             DataTable dtRepartidor = FuncionesBuscar.BuscarRepartidor(nombreRepartidor);
 
@@ -42,8 +58,30 @@ namespace UnicosturaAdminEnC.Fomularios
         private void btn_Eliminar_Click(object sender, EventArgs e)
         {
             string nombreRepartidor = textBox1.Text;
-            FuncionesEliminar.EliminarRepartidor(nombreRepartidor);
-            AdministarRepartidor_Load(sender, e);
+
+            if (string.IsNullOrEmpty(nombreRepartidor))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Nombre no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
+            DialogResult resultado = MessageBox.Show("¿Estás seguro de que deseas eliminar a " + nombreRepartidor + "?",
+                                    "Confirmar eliminación",
+                                    MessageBoxButtons.YesNo,
+                                    MessageBoxIcon.Question);
+
+            if (resultado == DialogResult.Yes)
+            {
+                FuncionesEliminar.EliminarRepartidor(nombreRepartidor);
+                AdministarRepartidor_Load(sender, e);
+            }
+            else
+            {
+                return;
+            }
+
         }
 
         private void btn_EliminarDeGrilla_Click(object sender, EventArgs e)
@@ -53,8 +91,21 @@ namespace UnicosturaAdminEnC.Fomularios
             DataGridViewRow selectedRow = dataGridView1.Rows[rowIndex];
             string nombreRepartidor = Convert.ToString(selectedRow.Cells["NombreRepartidor"].Value);
 
-            FuncionesEliminar.EliminarRepartidor(nombreRepartidor);
-            AdministarRepartidor_Load(sender, e);
+            DialogResult resultado = MessageBox.Show("¿Estás seguro de que deseas eliminar a " + nombreRepartidor + "?",
+                                    "Confirmar eliminación",
+                                    MessageBoxButtons.YesNo,
+                                    MessageBoxIcon.Question);
+
+            if (resultado == DialogResult.Yes)
+            {
+                FuncionesEliminar.EliminarRepartidor(nombreRepartidor);
+                AdministarRepartidor_Load(sender, e);
+            }
+            else
+            {
+                return;
+            }
+
         }
 
         private void btn_Actualizar_Click(object sender, EventArgs e)

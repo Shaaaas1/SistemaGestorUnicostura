@@ -226,7 +226,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\LOGO NUEVO.png" />
+    <None Include="Resources\LOGO NUEVO1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\LOGO NUEVO.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

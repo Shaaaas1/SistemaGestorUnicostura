@@ -100,8 +100,8 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::UnicosturaAdminEnC.Properties.Resources.LOGO_NUEVO;
-            this.pictureBox1.Location = new System.Drawing.Point(15, 9);
+            this.pictureBox1.Image = global::UnicosturaAdminEnC.Properties.Resources.LOGO_NUEVO1;
+            this.pictureBox1.Location = new System.Drawing.Point(12, 9);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(600, 159);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -111,7 +111,7 @@
             // SistemaGestorUnicostura
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.BackColor = System.Drawing.Color.Goldenrod;
             this.ClientSize = new System.Drawing.Size(632, 331);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.tableLayoutPanel1);

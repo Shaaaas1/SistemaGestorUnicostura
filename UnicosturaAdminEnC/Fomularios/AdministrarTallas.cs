@@ -25,6 +25,14 @@ namespace UnicosturaAdminEnC
         {
             string nombreTalla = textBox1.Text;
 
+            if (string.IsNullOrEmpty(nombreTalla))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Nombre no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
             FuncionesAgregar.AgregarTalla(nombreTalla);
             AdministrarTallas_Load(sender, e);
             textBox1.Text = "";
@@ -76,6 +84,14 @@ namespace UnicosturaAdminEnC
         {
             string nombreTalla = textBox1.Text;
 
+            if (string.IsNullOrEmpty(nombreTalla))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Nombre no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
             DataTable dtTallas = FuncionesBuscar.BuscarTallas(nombreTalla);
 
             dataGridView1.DataSource = dtTallas;
@@ -89,10 +105,32 @@ namespace UnicosturaAdminEnC
         private void btn_EliminarTalla_Click(object sender, EventArgs e)
         
         {
+            string nombreTalla = textBox1.Text;
 
-                string nombreTalla = textBox1.Text;
+            if (string.IsNullOrEmpty(nombreTalla))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Nombre no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
+            DialogResult resultado = MessageBox.Show("¿Estás seguro de que deseas eliminar a " + nombreTalla + "?",
+                        "Confirmar eliminación",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question);
+
+            if (resultado == DialogResult.Yes)
+            {
                 FuncionesEliminar.EliminarTalla(nombreTalla);
                 AdministrarTallas_Load(sender, e);
+            }
+            else
+            {
+                return;
+            }
+
+
 
         }
 
@@ -103,8 +141,42 @@ namespace UnicosturaAdminEnC
             DataGridViewRow selectedRow = dataGridView1.Rows[rowIndex];
             string nombreTalla = Convert.ToString(selectedRow.Cells["NombreTalla"].Value);
 
-            FuncionesEliminar.EliminarTalla(nombreTalla);
-            AdministrarTallas_Load(sender, e);
+            DialogResult resultado = MessageBox.Show("¿Estás seguro de que deseas eliminar a " + nombreTalla + "?",
+            "Confirmar eliminación",
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+
+            if (resultado == DialogResult.Yes)
+            {
+                FuncionesEliminar.EliminarTalla(nombreTalla);
+                AdministrarTallas_Load(sender, e);
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        public void CustomizarBoton(Button boton, string texto, Color colorFondo, Color colorTexto, int tamanoFuente)
+        {
+            boton.Text = texto;
+            boton.BackColor = colorFondo;
+            boton.ForeColor = colorTexto;
+            boton.Font = new Font("Arial", tamanoFuente, FontStyle.Bold);
+            boton.FlatAppearance.MouseDownBackColor = colorFondo;
+            boton.FlatAppearance.MouseOverBackColor = ControlPaint.Light(colorFondo);
+
+            // Establecer el color y grosor del borde
+            boton.FlatStyle = FlatStyle.Flat;
+            boton.FlatAppearance.BorderSize = 3;
+            boton.FlatAppearance.BorderColor = Color.FromArgb(220, 220, 220);
+        }
+
+        public void CustomizarLabel(Label label, string texto, Color colorTexto, int tamanoFuente)
+        {
+            label.Text = texto;
+            label.Font = new Font("Arial", tamanoFuente, FontStyle.Bold);
+            label.ForeColor = colorTexto;
         }
 
     }

@@ -27,7 +27,25 @@ namespace UnicosturaAdminEnC
         private void btn_Agregar_Click(object sender, EventArgs e)
         {
             string nombreMolde = tbx_NombreMolde.Text;
-            int NumeroMoldes = tbx_NumeroMoldes.Text.Length;
+            
+
+            if (string.IsNullOrEmpty(nombreMolde))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Nombre no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
+            if (string.IsNullOrEmpty(tbx_NumeroMoldes.Text))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de NumeroMoldes no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
+            int NumeroMoldes = int.Parse(tbx_NumeroMoldes.Text);
 
             FuncionesAgregar.AgregarMolde(nombreMolde, NumeroMoldes);
             AdministrarMoldes_Load(sender, e);
@@ -85,6 +103,15 @@ namespace UnicosturaAdminEnC
         {
             string nombreMolde = tbx_NombreMolde.Text;
 
+
+            if (string.IsNullOrEmpty(nombreMolde))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Nombre no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
             DataTable dtMoldes = FuncionesBuscar.BuscarMolde(nombreMolde);
 
             dataGridView1.DataSource = dtMoldes;
@@ -93,8 +120,32 @@ namespace UnicosturaAdminEnC
         private void btn_Eliminar_Click(object sender, EventArgs e)
         {
             string nombreMolde = tbx_NombreMolde.Text;
-            FuncionesEliminar.EliminarMolde(nombreMolde);
-            AdministrarMoldes_Load(sender, e);
+
+
+            if (string.IsNullOrEmpty(nombreMolde))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Nombre no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
+            DialogResult resultado = MessageBox.Show("¿Estás seguro de que deseas eliminar a " + nombreMolde + "?",
+            "Confirmar eliminación",
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+
+            if (resultado == DialogResult.Yes)
+            {
+                FuncionesEliminar.EliminarMolde(nombreMolde);
+                AdministrarMoldes_Load(sender, e);
+            }
+            else
+            {
+                return;
+            }
+
+
         }
 
         private void btn_EliminarDeGrilla_Click(object sender, EventArgs e)
@@ -104,14 +155,45 @@ namespace UnicosturaAdminEnC
             DataGridViewRow selectedRow = dataGridView1.Rows[rowIndex];
             string nombreMolde = Convert.ToString(selectedRow.Cells["NombreMoldes"].Value);
 
-            FuncionesEliminar.EliminarMolde(nombreMolde);
-            AdministrarMoldes_Load(sender, e);
+            DialogResult resultado = MessageBox.Show("¿Estás seguro de que deseas eliminar a " + nombreMolde + "?",
+                                     "Confirmar eliminación",
+                                     MessageBoxButtons.YesNo,
+                                     MessageBoxIcon.Question);
+
+            if (resultado == DialogResult.Yes)
+            {
+                FuncionesEliminar.EliminarMolde(nombreMolde);
+                AdministrarMoldes_Load(sender, e);
+            }
+            else
+            {
+                return;
+            }
+
         }
 
         private void btn_Modificar_Click(object sender, EventArgs e)
         {
             // Obtener los valores ingresados en los campos de texto
             string nombreMolde = tbx_NombreMolde.Text;
+
+
+            if (string.IsNullOrEmpty(nombreMolde))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Nombre no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
+            if (string.IsNullOrEmpty(tbx_NumeroMoldes.Text))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de NumeroMoldes no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
             int numeroMolde = int.Parse(tbx_NumeroMoldes.Text);
 
             // Crear la conexión a la base de datos

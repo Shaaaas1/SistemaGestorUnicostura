@@ -175,9 +175,9 @@ public class FuncionesAgregar
     }
 
     // Función para agregar un objeto DetallePedidoMoldes a la base de datos
-    public static void AgregarDetallePedidoMoldes(int idPedido, int idTalla, int codigoMolde, bool moldeEnStock, bool moldeFallido)
+    public static void AgregarDetallePedidoMoldes(int idPedido, int idTalla, int codigoMolde, bool moldeEnStock, bool moldeFallido, bool precioVariable, bool precioEspecial)
     {
-        string query = "INSERT INTO DetallePedidoMoldes (IdPedido, IdTalla, CodigoMolde, MoldeEnStock, MoldeFallido) VALUES (@idPedido, @idTalla, @codigoMolde, @moldeEnStock, @moldeFallido)";
+        string query = "INSERT INTO DetallePedidoMoldes (IdPedido, IdTalla, CodigoMolde, MoldeEnStock, MoldeFallido, PrecioVariable, PrecioEspecial) VALUES (@idPedido, @idTalla, @codigoMolde, @moldeEnStock, @moldeFallido, @precioVariable, @precioEspecial)";
 
         using (SQLiteCommand command = new SQLiteCommand(query, connection))
         {
@@ -186,6 +186,8 @@ public class FuncionesAgregar
             command.Parameters.AddWithValue("@codigoMolde", codigoMolde);
             command.Parameters.AddWithValue("@moldeEnStock", moldeEnStock);
             command.Parameters.AddWithValue("@moldeFallido", moldeFallido);
+            command.Parameters.AddWithValue("@precioVariable", precioVariable);
+            command.Parameters.AddWithValue("@precioEspecial", precioEspecial);
 
             connection.Open();
             command.ExecuteNonQuery();
@@ -207,7 +209,7 @@ public class FuncionesAgregar
         AgregarRepartidor("Repartidor 1");
         AgregarCliente("Cliente 1", 123456789, "Dirección 1", "RUT 1", "Alias 1", "Fuente 1");
         AgregarPedidoMolde(1, 1, 1, 1, 1, 10, 100, 12345, DateTime.Now);
-        AgregarDetallePedidoMoldes(1, 1, 1, true, false);
+        AgregarDetallePedidoMoldes(1, 1, 1, true, false, false, false);
     }
 
     // Función para crear las tablas en la base de datos

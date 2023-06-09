@@ -41,15 +41,15 @@
             this.Btn_AdminTallas.Name = "Btn_AdminTallas";
             this.Btn_AdminTallas.Size = new System.Drawing.Size(227, 100);
             this.Btn_AdminTallas.TabIndex = 0;
-            this.Btn_AdminTallas.Text = "Administrar Tallas";
+            this.Btn_AdminTallas.Text = "Tallas";
             this.Btn_AdminTallas.UseVisualStyleBackColor = true;
             this.Btn_AdminTallas.Click += new System.EventHandler(this.Btn_AdminTallas_Click);
             // 
             // btn_NumeroMoldes
             // 
-            this.btn_NumeroMoldes.Location = new System.Drawing.Point(12, 220);
+            this.btn_NumeroMoldes.Location = new System.Drawing.Point(12, 224);
             this.btn_NumeroMoldes.Name = "btn_NumeroMoldes";
-            this.btn_NumeroMoldes.Size = new System.Drawing.Size(476, 100);
+            this.btn_NumeroMoldes.Size = new System.Drawing.Size(476, 96);
             this.btn_NumeroMoldes.TabIndex = 1;
             this.btn_NumeroMoldes.Text = "Numero de Moldes";
             this.btn_NumeroMoldes.UseVisualStyleBackColor = true;
@@ -89,6 +89,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.Goldenrod;
             this.ClientSize = new System.Drawing.Size(507, 332);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btn_Distribucion);

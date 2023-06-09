@@ -14,5 +14,7 @@ namespace UnicosturaAdminEnC.Clases
         public int CodigoMolde { get; set; }
         public Boolean MoldeEnStock { get; set; }
         public Boolean MoldeFallido { get; set; }
+        public Boolean PrecioVariable { get; set; }
+        public Boolean PrecioEspecial { get; set; }
     }
 }

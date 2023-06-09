@@ -26,6 +26,14 @@ namespace UnicosturaAdminEnC
         {
             string nombreDistribucion = textBox1.Text;
 
+            if (string.IsNullOrEmpty(nombreDistribucion))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Nombre no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
             FuncionesAgregar.AgregarDistribucion(nombreDistribucion);
             AdministarDistribucion_Load(sender, e);
         }
@@ -39,6 +47,14 @@ namespace UnicosturaAdminEnC
         {
             string nombreDistribucion = textBox1.Text;
 
+            if (string.IsNullOrEmpty(nombreDistribucion))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Nombre no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
             DataTable dtDistribucio = FuncionesBuscar.BuscarDistribucion(nombreDistribucion);
 
             dataGridView1.DataSource = dtDistribucio;
@@ -47,8 +63,30 @@ namespace UnicosturaAdminEnC
         private void btn_Eliminar_Click(object sender, EventArgs e)
         {
             string nombre = textBox1.Text;
-            FuncionesEliminar.EliminarDistribucion(nombre);
-            AdministarDistribucion_Load(sender, e);
+
+            if (string.IsNullOrEmpty(nombre))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Nombre no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
+            DialogResult resultado = MessageBox.Show("¿Estás seguro de que deseas eliminar a " + nombre + "?",
+                  "Confirmar eliminación",
+                  MessageBoxButtons.YesNo,
+                  MessageBoxIcon.Question);
+
+            if (resultado == DialogResult.Yes)
+            {
+                FuncionesEliminar.EliminarDistribucion(nombre);
+                AdministarDistribucion_Load(sender, e);
+            }
+            else
+            {
+                return;
+            }
+
         }
 
         private void btn_EliminarDeGrilla_Click(object sender, EventArgs e)
@@ -58,8 +96,21 @@ namespace UnicosturaAdminEnC
             DataGridViewRow selectedRow = dataGridView1.Rows[rowIndex];
             string nombreDistribucio = Convert.ToString(selectedRow.Cells["NombreDistribucio"].Value);
 
-            FuncionesEliminar.EliminarDistribucion(nombreDistribucio);
-            AdministarDistribucion_Load(sender, e);
+            DialogResult resultado = MessageBox.Show("¿Estás seguro de que deseas eliminar a " + nombreDistribucio + "?",
+                  "Confirmar eliminación",
+                  MessageBoxButtons.YesNo,
+                  MessageBoxIcon.Question);
+
+            if (resultado == DialogResult.Yes)
+            {
+                FuncionesEliminar.EliminarDistribucion(nombreDistribucio);
+                AdministarDistribucion_Load(sender, e);
+            }
+            else
+            {
+                return;
+            }
+
         }
 
         private void AdministarDistribucion_Load(object sender, EventArgs e)

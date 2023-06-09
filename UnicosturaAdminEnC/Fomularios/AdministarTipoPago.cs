@@ -26,6 +26,14 @@ namespace UnicosturaAdminEnC
         {
             string nombreTipoPago = textBox1.Text;
 
+            if (string.IsNullOrEmpty(nombreTipoPago))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Nombre no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
             FuncionesAgregar.AgregarTipoPago(nombreTipoPago);
             AdministarTipoPago_Load(sender, e);
         }
@@ -39,6 +47,14 @@ namespace UnicosturaAdminEnC
         {
             string nombreMolde = textBox1.Text;
 
+            if (string.IsNullOrEmpty(nombreMolde))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Nombre no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
             DataTable dtTipoPago = FuncionesBuscar.BuscarTipoPago(nombreMolde);
 
             dataGridView1.DataSource = dtTipoPago;
@@ -47,8 +63,31 @@ namespace UnicosturaAdminEnC
         private void btn_Eliminar_Click(object sender, EventArgs e)
         {
             string nombreTipoPago = textBox1.Text;
-            FuncionesEliminar.EliminarTipoPago(nombreTipoPago);
-            AdministarTipoPago_Load(sender, e);
+
+            if (string.IsNullOrEmpty(nombreTipoPago))
+            {
+                // Mostrar mensaje de error
+                MessageBox.Show("El campo de Nombre no puede estar vacío.",
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Cancelar la ejecución de la función
+            }
+
+            DialogResult resultado = MessageBox.Show("¿Estás seguro de que deseas eliminar a " + nombreTipoPago + "?",
+                                    "Confirmar eliminación",
+                                     MessageBoxButtons.YesNo,
+                                     MessageBoxIcon.Question);
+
+            if (resultado == DialogResult.Yes)
+            {
+                FuncionesEliminar.EliminarTipoPago(nombreTipoPago);
+                AdministarTipoPago_Load(sender, e);
+            }
+            else
+            {
+                return;
+            }
+
+
         }
 
         private void btn_EliminarDeGrilla_Click(object sender, EventArgs e)
@@ -58,8 +97,21 @@ namespace UnicosturaAdminEnC
             DataGridViewRow selectedRow = dataGridView1.Rows[rowIndex];
             string nombreTipoPago = Convert.ToString(selectedRow.Cells["NombrePago"].Value);
 
-            FuncionesEliminar.EliminarTipoPago(nombreTipoPago);
-            AdministarTipoPago_Load(sender, e);
+            DialogResult resultado = MessageBox.Show("¿Estás seguro de que deseas eliminar a " + nombreTipoPago + "?",
+                                    "Confirmar eliminación",
+                                    MessageBoxButtons.YesNo,
+                                    MessageBoxIcon.Question);
+
+            if (resultado == DialogResult.Yes)
+            {
+                FuncionesEliminar.EliminarTipoPago(nombreTipoPago);
+                AdministarTipoPago_Load(sender, e);
+            }
+            else
+            {
+                return;
+            }
+
         }
 
         private void AdministarTipoPago_Load(object sender, EventArgs e)

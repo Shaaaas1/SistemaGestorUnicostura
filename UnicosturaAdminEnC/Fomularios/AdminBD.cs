@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -77,7 +78,6 @@ namespace UnicosturaAdminEnC
         private void AdminBD_Load(object sender, EventArgs e)
         {
             // Personalizar la apariencia de la ventana
-            this.BackColor = Color.FromArgb(240, 240, 240);
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
 
@@ -85,7 +85,7 @@ namespace UnicosturaAdminEnC
             this.TransparencyKey = Color.Empty;
 
             // Personalizar el estilo de los botones
-            CustomizarBoton(Btn_AdminTallas, "Administrar Tallas", Color.FromArgb(52, 152, 219), Color.White, 14);
+            CustomizarBoton(Btn_AdminTallas, "Tallas", Color.FromArgb(52, 152, 219), Color.White, 14);
             CustomizarBoton(btn_NumeroMoldes, "Número de Moldes", Color.FromArgb(231, 76, 60), Color.White, 14);
             CustomizarBoton(btn_TipoPago, "Tipo de Pago", Color.FromArgb(46, 204, 113), Color.White, 14);
             CustomizarBoton(btn_Distribucion, "Distribución", Color.FromArgb(241, 196, 15), Color.Black, 14);
