@@ -59,6 +59,7 @@
             this.tbx_NombreMolde.Name = "tbx_NombreMolde";
             this.tbx_NombreMolde.Size = new System.Drawing.Size(164, 26);
             this.tbx_NombreMolde.TabIndex = 1;
+            this.tbx_NombreMolde.TextChanged += new System.EventHandler(this.tbx_NombreMolde_TextChanged);
             // 
             // label1
             // 

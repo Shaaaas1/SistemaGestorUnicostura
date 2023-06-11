@@ -405,6 +405,7 @@
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(436, 26);
             this.dateTimePicker1.TabIndex = 42;
+            this.dateTimePicker1.ValueChanged += new System.EventHandler(this.dateTimePicker1_ValueChanged);
             // 
             // Chbx_Impreso
             // 
@@ -480,6 +481,7 @@
             this.cbx_Rut.Size = new System.Drawing.Size(169, 27);
             this.cbx_Rut.TabIndex = 49;
             this.cbx_Rut.SelectedIndexChanged += new System.EventHandler(this.cbx_Rut_SelectedIndexChanged);
+            this.cbx_Rut.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cbx_Rut_KeyPress);
             // 
             // tbx_Fuente
             // 
@@ -504,6 +506,7 @@
             this.cbx_IdRepartidor.Name = "cbx_IdRepartidor";
             this.cbx_IdRepartidor.Size = new System.Drawing.Size(214, 27);
             this.cbx_IdRepartidor.TabIndex = 51;
+            this.cbx_IdRepartidor.SelectedIndexChanged += new System.EventHandler(this.cbx_IdRepartidor_SelectedIndexChanged);
             // 
             // cbx_IdDistribucion
             // 
@@ -523,6 +526,7 @@
             this.cbx_IdPago.Name = "cbx_IdPago";
             this.cbx_IdPago.Size = new System.Drawing.Size(214, 27);
             this.cbx_IdPago.TabIndex = 53;
+            this.cbx_IdPago.SelectedIndexChanged += new System.EventHandler(this.cbx_IdPago_SelectedIndexChanged);
             // 
             // btn_LimpiarCliente
             // 
@@ -588,6 +592,7 @@
             this.Controls.Add(this.dataGridView1);
             this.Name = "AdministarPedidos";
             this.Text = "AdministarPedidos";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AdministarPedidos_FormClosing);
             this.Load += new System.EventHandler(this.AdministarPedidos_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);

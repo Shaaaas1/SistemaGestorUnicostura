@@ -17,19 +17,22 @@ namespace UnicosturaAdminEnC
     public partial class AdministarDetallesPedido : Form
     {
         private AdministarPedidos administarPedidos;
+
+        private static SQLiteConnection connection;
         public AdministarDetallesPedido(int idPedido, AdministarPedidos administarPedidos)
         {
             InitializeComponent();
+            connection = new SQLiteConnection("Data Source=pedidos.db;Version=3;");
+            connection.Open();
             tbx_IdPedido.Text = idPedido.ToString();
             RellenarCbxTallas();
             this.administarPedidos = administarPedidos;
         }
 
-        private static SQLiteConnection connection = new SQLiteConnection("Data Source=pedidos.db;Version=3;");
+        
 
         public void RellenarCbxTallas()
         {
-            connection.Open();
             string query = "SELECT IdTalla, NombreTalla FROM Talla";
             SQLiteDataAdapter adapter = new SQLiteDataAdapter(query, connection);
             DataTable dataTable = new DataTable();
@@ -37,7 +40,6 @@ namespace UnicosturaAdminEnC
             cbx_IdTalla.DataSource = dataTable;
             cbx_IdTalla.DisplayMember = "NombreTalla";
             cbx_IdTalla.ValueMember = "IdTalla";
-            connection.Close();
         }
 
         private void btn_Agregar_Click(object sender, EventArgs e)
@@ -65,7 +67,6 @@ namespace UnicosturaAdminEnC
             using (SQLiteConnection conn = new SQLiteConnection(connection))
             {
 
-                conn.Open();
 
                 int PrecioNormalDeTabla = 0;
                 int PrecioVariableDeTabla = 0;
@@ -251,7 +252,6 @@ namespace UnicosturaAdminEnC
                     }
                 }
 
-                conn.Close();
 
             }
 
@@ -261,6 +261,7 @@ namespace UnicosturaAdminEnC
 
         private void AdministrarDetallePedidos_Load(object sender, EventArgs e)
         {
+
             // Obtener los datos de la tabla "DetallePedidoMoldes"
             List<DetallePedidoMoldes> detallesPedido = ObtenerDetallesPedido();
 
@@ -295,7 +296,6 @@ namespace UnicosturaAdminEnC
 
             using (SQLiteConnection conn = new SQLiteConnection(connection))
             {
-                conn.Open();
 
                 using (SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM DetallePedidoMoldes WHERE IdPedido = @IdPedido", conn))
                 {
@@ -325,12 +325,49 @@ namespace UnicosturaAdminEnC
                         }
                     }
                 }
-
-                conn.Close();
             }
 
             return detallesPedido;
         }
+
+        private List<DetallePedidoMoldes> ObtenerDetallesPedido2()
+        {
+            List<DetallePedidoMoldes> detallesPedido = new List<DetallePedidoMoldes>();
+
+            using (SQLiteConnection conn = new SQLiteConnection(connection))
+            {
+
+                string query = "SELECT * FROM DetallePedidoMoldes WHERE IdPedido = @IdPedido";
+
+                SQLiteCommand command = new SQLiteCommand(query, conn);
+
+                int IdPedido = int.Parse(tbx_IdPedido.Text);
+
+                command.Parameters.AddWithValue("@IdPedido", IdPedido);
+
+                using (SQLiteDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        DetallePedidoMoldes detalle = new DetallePedidoMoldes();
+                        detalle.IdDetallePedido = Convert.ToInt32(reader["IdDetallePedido"]);
+                        detalle.IdPedido = Convert.ToInt32(reader["IdPedido"]);
+                        detalle.CodigoMolde = Convert.ToInt32(reader["CodigoMolde"]);
+                        detalle.IdTalla = Convert.ToInt32(reader["IdTalla"]);
+                        detalle.MoldeEnStock = Convert.ToBoolean(reader["MoldeEnStock"]);
+                        detalle.MoldeFallido = Convert.ToBoolean(reader["MoldeFallido"]);
+                        detalle.PrecioVariable = Convert.ToBoolean(reader["PrecioVariable"]);
+                        detalle.PrecioEspecial = Convert.ToBoolean(reader["PrecioEspecial"]);
+
+                        detallesPedido.Add(detalle);
+                    }
+                }
+
+            }
+
+            return detallesPedido;
+        }
+
 
         private void btn_Buscar_Click(object sender, EventArgs e)
         {
@@ -387,7 +424,6 @@ namespace UnicosturaAdminEnC
                 using (SQLiteConnection conn = new SQLiteConnection(connection))
                 {
 
-                    conn.Open();
 
                     int PrecioNormalDeTabla = 0;
                     int PrecioVariableDeTabla = 0;
@@ -573,7 +609,6 @@ namespace UnicosturaAdminEnC
                         }
                     }
 
-                    conn.Close();
 
                 }
 
@@ -628,7 +663,6 @@ namespace UnicosturaAdminEnC
 
                     using (SQLiteConnection conn = new SQLiteConnection(connection))
                     {
-                        conn.Open();
 
                         using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
                         {
@@ -647,7 +681,6 @@ namespace UnicosturaAdminEnC
                             }
                         }
 
-                        conn.Close();
                     }
                 }
             }
@@ -711,16 +744,6 @@ namespace UnicosturaAdminEnC
             }
         }
 
-        private void tbx_CodigoMolde_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void cbx_IdTalla_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.ColumnIndex == dataGridView1.Columns["IdTalla"].Index && e.Value != null)
@@ -738,7 +761,6 @@ namespace UnicosturaAdminEnC
 
             using (SQLiteConnection conn = new SQLiteConnection(connection))
             {
-                conn.Open();
 
                 using (SQLiteCommand cmd = new SQLiteCommand("SELECT NombreTalla FROM Talla WHERE IdTalla = @IdTalla", conn))
                 {
@@ -753,7 +775,6 @@ namespace UnicosturaAdminEnC
                     }
                 }
 
-                conn.Close();
             }
 
             return nombreTalla;
@@ -795,5 +816,121 @@ namespace UnicosturaAdminEnC
                 }
             }
         }
+
+        private void tbx_CodigoMolde_TextChanged(object sender, EventArgs e)
+        {
+            string filtro1 = tbx_CodigoMolde.Text;
+
+            // Obtener los detalles de pedido filtrados
+            List<DetallePedidoMoldes> filtrados = ObtenerFiltrados(filtro1);
+
+            // Actualizar el origen de datos del DataGridView
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = filtrados;
+
+            dataGridView1.Columns["IdDetallePedido"].DisplayIndex = 0;
+            dataGridView1.Columns["IdPedido"].DisplayIndex = 1;
+            dataGridView1.Columns["CodigoMolde"].DisplayIndex = 2;
+            dataGridView1.Columns["IdTalla"].DisplayIndex = 3;
+            dataGridView1.Columns["MoldeEnStock"].DisplayIndex = 4;
+            dataGridView1.Columns["MoldeFallido"].DisplayIndex = 5;
+            dataGridView1.Columns["PrecioVariable"].DisplayIndex = 6;
+            dataGridView1.Columns["PrecioEspecial"].DisplayIndex = 7;
+
+            dataGridView1.Columns[0].HeaderText = "ID Detalle";
+            dataGridView1.Columns[1].HeaderText = "ID Pedido";
+            dataGridView1.Columns[2].HeaderText = "Talla";
+            dataGridView1.Columns[3].HeaderText = "Codigo";
+            dataGridView1.Columns[4].HeaderText = "Molde En Stock";
+            dataGridView1.Columns[5].HeaderText = "Molde Fallido";
+            dataGridView1.Columns[6].HeaderText = "Precio Variable";
+            dataGridView1.Columns[7].HeaderText = "Precio Especial";
+        }
+
+        private List<DetallePedidoMoldes> ObtenerFiltrados(string filtro1)
+        {
+            List<DetallePedidoMoldes> ListaBD = ObtenerDetallesPedido();
+            List<DetallePedidoMoldes> filtrados = new List<DetallePedidoMoldes>();
+
+            foreach (DetallePedidoMoldes detalle in ListaBD)
+            {
+                if (detalle.CodigoMolde.ToString().StartsWith(filtro1))
+                {
+                    filtrados.Add(detalle);
+                }
+            }
+
+            return filtrados;
+        }
+
+        private void cbx_IdTalla_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string filtro = Convert.ToString(cbx_IdTalla.SelectedValue);
+
+            // Obtener los detalles de pedido filtrados
+            List<DetallePedidoMoldes> filtrados = ObtenerFiltrados2(filtro);
+
+            // Actualizar el origen de datos del DataGridView
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = filtrados;
+
+            dataGridView1.Columns["IdDetallePedido"].DisplayIndex = 0;
+            dataGridView1.Columns["IdPedido"].DisplayIndex = 1;
+            dataGridView1.Columns["CodigoMolde"].DisplayIndex = 2;
+            dataGridView1.Columns["IdTalla"].DisplayIndex = 3;
+            dataGridView1.Columns["MoldeEnStock"].DisplayIndex = 4;
+            dataGridView1.Columns["MoldeFallido"].DisplayIndex = 5;
+            dataGridView1.Columns["PrecioVariable"].DisplayIndex = 6;
+            dataGridView1.Columns["PrecioEspecial"].DisplayIndex = 7;
+
+            dataGridView1.Columns[0].HeaderText = "ID Detalle";
+            dataGridView1.Columns[1].HeaderText = "ID Pedido";
+            dataGridView1.Columns[2].HeaderText = "Talla";
+            dataGridView1.Columns[3].HeaderText = "Codigo";
+            dataGridView1.Columns[4].HeaderText = "Molde En Stock";
+            dataGridView1.Columns[5].HeaderText = "Molde Fallido";
+            dataGridView1.Columns[6].HeaderText = "Precio Variable";
+            dataGridView1.Columns[7].HeaderText = "Precio Especial";
+        }
+
+        private List<DetallePedidoMoldes> ObtenerFiltrados2(string filtro1)
+        {
+            List<DetallePedidoMoldes> ListaBD = ObtenerDetallesPedido2();
+            List<DetallePedidoMoldes> filtrados = new List<DetallePedidoMoldes>();
+
+            if (int.TryParse(filtro1, out int idTalla))
+            {
+                foreach (DetallePedidoMoldes detalle in ListaBD)
+                {
+                    if (detalle.IdTalla == idTalla)
+                    {
+                        filtrados.Add(detalle);
+                    }
+                }
+            }
+
+            return filtrados;
+        }
+
+        private void AdministarDetallesPedido_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            connection.Close();
+        }
+
+        private AdministarPedidos administarPedidos1;
+        private void btn_Regresar_Click(object sender, EventArgs e)
+        {
+            
+
+            if (administarPedidos1 == null)
+            {
+                administarPedidos1 = new AdministarPedidos();
+                administarPedidos1.FormClosed += (s, args) => administarPedidos1 = null; // Esto permite liberar la instancia cuando se cierra el formulario
+            }
+            administarPedidos1.Show();
+            this.Close();
+        }
+
+
     }
 }

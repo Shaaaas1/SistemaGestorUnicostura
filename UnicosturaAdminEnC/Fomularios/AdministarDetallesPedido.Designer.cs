@@ -46,6 +46,7 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.chbx_PrecioVariable = new System.Windows.Forms.CheckBox();
             this.chbx_PrecioEspecial = new System.Windows.Forms.CheckBox();
+            this.btn_Regresar = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -284,12 +285,23 @@
             this.chbx_PrecioEspecial.UseVisualStyleBackColor = true;
             this.chbx_PrecioEspecial.CheckedChanged += new System.EventHandler(this.chbx_PrecioEspecial_CheckedChanged);
             // 
+            // btn_Regresar
+            // 
+            this.btn_Regresar.Location = new System.Drawing.Point(741, 19);
+            this.btn_Regresar.Name = "btn_Regresar";
+            this.btn_Regresar.Size = new System.Drawing.Size(134, 76);
+            this.btn_Regresar.TabIndex = 22;
+            this.btn_Regresar.Text = "Volver a la Venta Anterior";
+            this.btn_Regresar.UseVisualStyleBackColor = true;
+            this.btn_Regresar.Click += new System.EventHandler(this.btn_Regresar_Click);
+            // 
             // AdministarDetallesPedido
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Goldenrod;
             this.ClientSize = new System.Drawing.Size(889, 580);
+            this.Controls.Add(this.btn_Regresar);
             this.Controls.Add(this.chbx_PrecioEspecial);
             this.Controls.Add(this.chbx_PrecioVariable);
             this.Controls.Add(this.tableLayoutPanel1);
@@ -304,6 +316,7 @@
             this.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.Name = "AdministarDetallesPedido";
             this.Text = "AdministarDetallesPedido";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AdministarDetallesPedido_FormClosing);
             this.Load += new System.EventHandler(this.AdministarDetallesPedido_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -333,5 +346,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.CheckBox chbx_PrecioVariable;
         private System.Windows.Forms.CheckBox chbx_PrecioEspecial;
+        private System.Windows.Forms.Button btn_Regresar;
     }
 }

@@ -151,6 +151,7 @@
             this.tbx_NombreCliente.Name = "tbx_NombreCliente";
             this.tbx_NombreCliente.Size = new System.Drawing.Size(375, 26);
             this.tbx_NombreCliente.TabIndex = 9;
+            this.tbx_NombreCliente.TextChanged += new System.EventHandler(this.tbx_NombreCliente_TextChanged);
             // 
             // tbx_NumeroCliente
             // 
@@ -176,6 +177,7 @@
             this.tbx_Rut.Name = "tbx_Rut";
             this.tbx_Rut.Size = new System.Drawing.Size(176, 26);
             this.tbx_Rut.TabIndex = 12;
+            this.tbx_Rut.TextChanged += new System.EventHandler(this.tbx_Rut_TextChanged);
             // 
             // tbx_Alias
             // 
@@ -184,6 +186,7 @@
             this.tbx_Alias.Name = "tbx_Alias";
             this.tbx_Alias.Size = new System.Drawing.Size(160, 26);
             this.tbx_Alias.TabIndex = 13;
+            this.tbx_Alias.TextChanged += new System.EventHandler(this.tbx_Alias_TextChanged);
             // 
             // btn_Agregar
             // 
@@ -265,6 +268,7 @@
             this.tbx_Fuente.Name = "tbx_Fuente";
             this.tbx_Fuente.Size = new System.Drawing.Size(176, 28);
             this.tbx_Fuente.TabIndex = 21;
+            this.tbx_Fuente.TextChanged += new System.EventHandler(this.tbx_Fuente_TextChanged);
             this.tbx_Fuente.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comboBox1_KeyPress);
             // 
             // clienteBindingSource

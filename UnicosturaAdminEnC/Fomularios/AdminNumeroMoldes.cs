@@ -251,5 +251,33 @@ namespace UnicosturaAdminEnC
         {
             AdministrarMoldes_Load(sender, e);
         }
+
+        private void tbx_NombreMolde_TextChanged(object sender, EventArgs e)
+        {
+            string filtro = tbx_NombreMolde.Text;
+
+            // Obtener las distribuciones filtradas
+            List<Moldes> Filtrado = ObtenerFiltrados(filtro);
+
+            // Actualizar el origen de datos del DataGridView
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = Filtrado;
+        }
+
+        private List<Moldes> ObtenerFiltrados(string filtro)
+        {
+            List<Moldes> ListaBD = ObtenerMoldes();
+            List<Moldes> Filtrados = new List<Moldes>();
+
+            foreach (Moldes cosa in ListaBD)
+            {
+                if (cosa.NombreMoldes.Contains(filtro))
+                {
+                    Filtrados.Add(cosa);
+                }
+            }
+
+            return Filtrados;
+        }
     }
 }

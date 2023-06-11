@@ -13,9 +13,12 @@ namespace UnicosturaAdminEnC
 {
     public partial class AdministrarTallas : Form
     {
+        private List<Talla> tallas;
+        private List<Talla> tallasFiltradas;
         public AdministrarTallas()
         {
             InitializeComponent();
+
         }
 
         // Conexión a la base de datos
@@ -41,7 +44,7 @@ namespace UnicosturaAdminEnC
         private void AdministrarTallas_Load(object sender, EventArgs e)
         {
             // Obtener los datos de la tabla "Talla"
-            List<Talla> tallas = ObtenerTallas();
+            tallas = ObtenerTallas();
 
             // Enlazar los datos al DataGridView
             dataGridView1.DataSource = tallas;
@@ -179,5 +182,31 @@ namespace UnicosturaAdminEnC
             label.ForeColor = colorTexto;
         }
 
+        private List<Talla> ObtenerTallasFiltradas(string filtro)
+        {
+            List<Talla> tallasFiltradas = new List<Talla>();
+
+            foreach (Talla talla in tallas)
+            {
+                if (talla.NombreTalla.Contains(filtro))
+                {
+                    tallasFiltradas.Add(talla);
+                }
+            }
+
+            return tallasFiltradas;
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            string filtro = textBox1.Text;
+
+            // Obtener las tallas filtradas
+            List<Talla> tallasFiltradas = ObtenerTallasFiltradas(filtro);
+
+            // Actualizar el origen de datos del DataGridView
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = tallasFiltradas;
+        }
     }
 }

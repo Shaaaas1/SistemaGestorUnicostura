@@ -123,7 +123,7 @@ namespace UnicosturaAdminEnC
         }
 
         // Método para obtener los datos de la tabla "Talla"
-        private List<Distribucion> ObtenerDistribucion()
+        public List<Distribucion> ObtenerDistribucion()
         {
             List<Distribucion> distribuciones = new List<Distribucion>();
 
@@ -155,5 +155,32 @@ namespace UnicosturaAdminEnC
             return distribuciones;
         }
 
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            string filtro = textBox1.Text;
+
+            // Obtener las distribuciones filtradas
+            List<Distribucion> distribucionesFiltradas = ObtenerDistribucionesFiltradas(filtro);
+
+            // Actualizar el origen de datos del DataGridView
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = distribucionesFiltradas;
+        }
+
+        private List<Distribucion> ObtenerDistribucionesFiltradas(string filtro)
+        {
+            List<Distribucion>  distrbuciones = ObtenerDistribucion();
+            List<Distribucion> distribucionesFiltradas = new List<Distribucion>();
+
+            foreach (Distribucion distribucion in distrbuciones)
+            {
+                if (distribucion.NombreDistribucio.Contains(filtro))
+                {
+                    distribucionesFiltradas.Add(distribucion);
+                }
+            }
+
+            return distribucionesFiltradas;
+        }
     }
 }

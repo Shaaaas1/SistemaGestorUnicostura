@@ -15,9 +15,12 @@ namespace UnicosturaAdminEnC
 {
     public partial class AdministarPedidos : Form
     {
+        static string connectionString = "Data Source=pedidos.db;Version=3;";
+        private static SQLiteConnection connection = new SQLiteConnection(connectionString);
         public AdministarPedidos()
         {
             InitializeComponent();
+            connection.Open();
             RellenarCbxCliente();
             RellenarCbxNumeroCliente();
             RellenarCbxAlias();
@@ -29,60 +32,49 @@ namespace UnicosturaAdminEnC
             tbx_IdCliente.Text = "-1";
         }
 
-        static string connectionString = "Data Source=pedidos.db;Version=3;";
-        SQLiteConnection connection = new SQLiteConnection(connectionString);
-
         public void RellenarCbxCliente()
         {
-            connection.Open();
-            string query = "SELECT NombreCliente FROM Cliente";
+            string query = "SELECT NombreCliente, IdCliente FROM Cliente";
             SQLiteDataAdapter adapter = new SQLiteDataAdapter(query, connection);
             DataTable dataTable = new DataTable();
             adapter.Fill(dataTable);
             cbx_NombreCliente.DataSource = dataTable;
             cbx_NombreCliente.DisplayMember = "NombreCliente";
-            connection.Close();
+            cbx_NombreCliente.ValueMember = "IdCliente";
         }
 
         public void RellenarCbxAlias()
         {
-            connection.Open();
             string query = "SELECT Alias FROM Cliente";
             SQLiteDataAdapter adapter = new SQLiteDataAdapter(query, connection);
             DataTable dataTable = new DataTable();
             adapter.Fill(dataTable);
             cbx_Alias.DataSource = dataTable;
             cbx_Alias.DisplayMember = "Alias";
-            connection.Close();
         }
 
         public void RellenarCbxNumeroCliente()
         {
-            connection.Open();
             string query = "SELECT CelularCliente FROM Cliente";
             SQLiteDataAdapter adapter = new SQLiteDataAdapter(query, connection);
             DataTable dataTable = new DataTable();
             adapter.Fill(dataTable);
             cbx_CelularCliente.DataSource = dataTable;
             cbx_CelularCliente.DisplayMember = "CelularCliente";
-            connection.Close();
         }
 
         public void RellenarCbxRut()
         {
-            connection.Open();
             string query = "SELECT Rut FROM Cliente";
             SQLiteDataAdapter adapter = new SQLiteDataAdapter(query, connection);
             DataTable dataTable = new DataTable();
             adapter.Fill(dataTable);
             cbx_Rut.DataSource = dataTable;
             cbx_Rut.DisplayMember = "Rut";
-            connection.Close();
         }
 
         public void RellenarRepartidor()
         {
-            connection.Open();
             string query = "SELECT IdRepartidor, NombreRepartidor FROM Repartidor";
             SQLiteDataAdapter adapter = new SQLiteDataAdapter(query, connection);
             DataTable repartidorTable = new DataTable();
@@ -90,12 +82,10 @@ namespace UnicosturaAdminEnC
             cbx_IdRepartidor.DataSource = repartidorTable;
             cbx_IdRepartidor.DisplayMember = "NombreRepartidor";
             cbx_IdRepartidor.ValueMember = "IdRepartidor";
-            connection.Close();
         }
 
         public void RellenarDistribucion()
         {
-            connection.Open();
             string query = "SELECT IdDistribucion, NombreDistribucio FROM Distribucion";
             SQLiteDataAdapter adapter = new SQLiteDataAdapter(query, connection);
             DataTable distribucionTable = new DataTable();
@@ -103,12 +93,10 @@ namespace UnicosturaAdminEnC
             cbx_IdDistribucion.DataSource = distribucionTable;
             cbx_IdDistribucion.DisplayMember = "NombreDistribucio";
             cbx_IdDistribucion.ValueMember = "IdDistribucion";
-            connection.Close();
         }
 
         public void RellenarTipoPago()
         {
-            connection.Open();
             string query = "SELECT IdPago, NombrePago FROM TipoPago";
             SQLiteDataAdapter adapter = new SQLiteDataAdapter(query, connection);
             DataTable tipoPagoTable = new DataTable();
@@ -116,7 +104,6 @@ namespace UnicosturaAdminEnC
             cbx_IdPago.DataSource = tipoPagoTable;
             cbx_IdPago.DisplayMember = "NombrePago";
             cbx_IdPago.ValueMember = "IdPago";
-            connection.Close();
         }
 
         private void btn_Agregar_Click(object sender, EventArgs e)
@@ -182,11 +169,12 @@ namespace UnicosturaAdminEnC
             {
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
+                    connection.Open();
                     string query = "SELECT * FROM Cliente WHERE Rut = @rut";
                     using (SQLiteCommand command = new SQLiteCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@rut", rutSeleccionado);
-                        connection.Open();
+
                         using (SQLiteDataReader reader = command.ExecuteReader())
                         {
                             if (reader.Read())
@@ -222,17 +210,18 @@ namespace UnicosturaAdminEnC
 
         private void cbx_NombreCliente_SelectedIndexChanged(object sender, EventArgs e)
         {
+
             string nombreClienteSeleccionado = cbx_NombreCliente.Text;
 
             if (!string.IsNullOrEmpty(nombreClienteSeleccionado))
             {
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
+                    connection.Open();
                     string query = "SELECT * FROM Cliente WHERE NombreCliente = @nombreCliente";
                     using (SQLiteCommand command = new SQLiteCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@nombreCliente", nombreClienteSeleccionado);
-                        connection.Open();
                         using (SQLiteDataReader reader = command.ExecuteReader())
                         {
                             if (reader.Read())
@@ -264,6 +253,37 @@ namespace UnicosturaAdminEnC
                 tbx_Fuente.Text = string.Empty;
                 tbx_Direccion.Text = string.Empty;
             }
+
+            string filtro = Convert.ToString(cbx_NombreCliente.SelectedValue);
+
+            // Obtener los detalles de pedido filtrados
+            List<PedidoMolde> filtrados = ObtenerFiltrados1(filtro);
+
+            // Actualizar el origen de datos del DataGridView
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = filtrados;
+
+            dataGridView1.Columns["IdPedido"].DisplayIndex = 0;
+            dataGridView1.Columns["IdCliente"].DisplayIndex = 1;
+            dataGridView1.Columns["IdDistribucion"].DisplayIndex = 2;
+            dataGridView1.Columns["IdPago"].DisplayIndex = 3;
+            dataGridView1.Columns["IdRepartidor"].DisplayIndex = 4;
+            dataGridView1.Columns["TotalMoldes"].DisplayIndex = 5;
+            dataGridView1.Columns["ValorPedido"].DisplayIndex = 6;
+            dataGridView1.Columns["NumBoletaImpresa"].DisplayIndex = 7;
+            dataGridView1.Columns["Fecha"].DisplayIndex = 8;
+            dataGridView1.Columns["IdEstado"].DisplayIndex = 9;
+
+            dataGridView1.Columns[0].HeaderText = "ID Pedido";
+            dataGridView1.Columns[1].HeaderText = "Cliente";
+            dataGridView1.Columns[2].HeaderText = "ID Estado";
+            dataGridView1.Columns[3].HeaderText = "Repartidor";
+            dataGridView1.Columns[4].HeaderText = "Distribucion";
+            dataGridView1.Columns[5].HeaderText = "Tipo de Pago";
+            dataGridView1.Columns[6].HeaderText = "Total de Moldes";
+            dataGridView1.Columns[7].HeaderText = "Valor del Pedido";
+            dataGridView1.Columns[8].HeaderText = "Numero de Boleta";
+            dataGridView1.Columns[9].HeaderText = "Fecha";
         }
 
         private void cbx_Alias_SelectedIndexChanged(object sender, EventArgs e)
@@ -274,11 +294,11 @@ namespace UnicosturaAdminEnC
             {
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
+                    connection.Open();
                     string query = "SELECT * FROM Cliente WHERE Alias = @alias";
                     using (SQLiteCommand command = new SQLiteCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@alias", aliasSeleccionado);
-                        connection.Open();
                         using (SQLiteDataReader reader = command.ExecuteReader())
                         {
                             if (reader.Read())
@@ -320,11 +340,11 @@ namespace UnicosturaAdminEnC
             {
                 using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
+                    connection.Open();
                     string query = "SELECT * FROM Cliente WHERE CelularCliente = @celularCliente";
                     using (SQLiteCommand command = new SQLiteCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@celularCliente", celularClienteSeleccionado);
-                        connection.Open();
                         using (SQLiteDataReader reader = command.ExecuteReader())
                         {
                             if (reader.Read())
@@ -421,7 +441,6 @@ namespace UnicosturaAdminEnC
 
             using (SQLiteConnection conn = new SQLiteConnection(connection))
             {
-                conn.Open();
 
                 using (SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM PedidoMolde", conn))
                 {
@@ -450,7 +469,6 @@ namespace UnicosturaAdminEnC
                     }
                 }
 
-                conn.Close();
             }
 
             return pedidos;
@@ -544,7 +562,6 @@ namespace UnicosturaAdminEnC
 
                 using (SQLiteConnection conn = new SQLiteConnection(connection))
                 {
-                    conn.Open();
 
                     using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
                     {
@@ -569,7 +586,6 @@ namespace UnicosturaAdminEnC
                         }
                     }
 
-                    conn.Close();
                 }
 
                 // Rellenar Datos Cliente
@@ -579,7 +595,6 @@ namespace UnicosturaAdminEnC
 
                 using (SQLiteConnection conn = new SQLiteConnection(connection))
                 {
-                    conn.Open();
 
                     using (SQLiteCommand cmd = new SQLiteCommand(query2, conn))
                     {
@@ -608,7 +623,6 @@ namespace UnicosturaAdminEnC
                         }
                     }
 
-                    conn.Close();
                 }
 
                 // Rellenar Datos Repartidor
@@ -618,7 +632,6 @@ namespace UnicosturaAdminEnC
 
                 using (SQLiteConnection conn = new SQLiteConnection(connection))
                 {
-                    conn.Open();
 
                     using (SQLiteCommand cmd = new SQLiteCommand(query3, conn))
                     {
@@ -637,7 +650,6 @@ namespace UnicosturaAdminEnC
                         }
                     }
 
-                    conn.Close();
                 }
 
                 // Rellenar Datos Distribucion
@@ -647,7 +659,6 @@ namespace UnicosturaAdminEnC
 
                 using (SQLiteConnection conn = new SQLiteConnection(connection))
                 {
-                    conn.Open();
 
                     using (SQLiteCommand cmd = new SQLiteCommand(query4, conn))
                     {
@@ -666,7 +677,6 @@ namespace UnicosturaAdminEnC
                         }
                     }
 
-                    conn.Close();
                 }
 
                 // Rellenar Datos TipoPago
@@ -676,7 +686,6 @@ namespace UnicosturaAdminEnC
 
                 using (SQLiteConnection conn = new SQLiteConnection(connection))
                 {
-                    conn.Open();
 
                     using (SQLiteCommand cmd = new SQLiteCommand(query5, conn))
                     {
@@ -694,8 +703,6 @@ namespace UnicosturaAdminEnC
                             }
                         }
                     }
-
-                    conn.Close();
                 }
 
             }
@@ -749,7 +756,6 @@ namespace UnicosturaAdminEnC
             // Crear la conexión a la base de datos
             using (SQLiteConnection conn = new SQLiteConnection(connection))
             {
-                conn.Open();
 
                 // Crear el comando SQL para modificar el Cliente
                 string sql = "UPDATE Cliente SET CelularCliente = @CelularCliente, Direccion = @Direccion, Rut = @Rut, Alias = @Alias, Fuente = @Fuente WHERE NombreCliente = @NombreCliente";
@@ -835,8 +841,6 @@ namespace UnicosturaAdminEnC
                     }
 
                 }
-
-                conn.Close();
                 AdministarPedidos_Load(sender, e);
 
             }
@@ -885,11 +889,7 @@ namespace UnicosturaAdminEnC
                 administarDetallesPedido.FormClosed += (s, args) => administarDetallesPedido = null; // Esto permite liberar la instancia cuando se cierra el formulario
             }
             administarDetallesPedido.Show();
-        }
-
-        private void cbx_IdDistribucion_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
+            this.Close();
         }
 
         private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -926,7 +926,6 @@ namespace UnicosturaAdminEnC
 
             using (SQLiteConnection conn = new SQLiteConnection(connection))
             {
-                conn.Open();
 
                 using (SQLiteCommand cmd = new SQLiteCommand("SELECT NombreDistribucio FROM Distribucion WHERE IdDistribucion = @IdDistribucion", conn))
                 {
@@ -941,7 +940,6 @@ namespace UnicosturaAdminEnC
                     }
                 }
 
-                conn.Close();
             }
 
             return nombreDistribucion;
@@ -953,7 +951,6 @@ namespace UnicosturaAdminEnC
 
             using (SQLiteConnection conn = new SQLiteConnection(connection))
             {
-                conn.Open();
 
                 using (SQLiteCommand cmd = new SQLiteCommand("SELECT NombrePago FROM TipoPago WHERE IdPago = @IdPago", conn))
                 {
@@ -968,7 +965,6 @@ namespace UnicosturaAdminEnC
                     }
                 }
 
-                conn.Close();
             }
 
             return nombrePago;
@@ -980,7 +976,6 @@ namespace UnicosturaAdminEnC
 
             using (SQLiteConnection conn = new SQLiteConnection(connection))
             {
-                conn.Open();
 
                 using (SQLiteCommand cmd = new SQLiteCommand("SELECT NombreCliente FROM Cliente WHERE IdCliente = @IdCliente", conn))
                 {
@@ -995,7 +990,6 @@ namespace UnicosturaAdminEnC
                     }
                 }
 
-                conn.Close();
             }
 
             return nombreBoleta;
@@ -1007,7 +1001,6 @@ namespace UnicosturaAdminEnC
 
             using (SQLiteConnection conn = new SQLiteConnection(connection))
             {
-                conn.Open();
 
                 using (SQLiteCommand cmd = new SQLiteCommand("SELECT NombreRepartidor FROM Repartidor WHERE IdRepartidor = @IdRepartidor", conn))
                 {
@@ -1022,10 +1015,330 @@ namespace UnicosturaAdminEnC
                     }
                 }
 
-                conn.Close();
             }
 
             return nombreRepartidor;
         }
+
+        private void cbx_Rut_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Validar que solo se admitan números, guion y la letra 'K' (mayúscula o minúscula)
+            if (!char.IsDigit(e.KeyChar) && e.KeyChar != '-' && !(char.ToUpper(e.KeyChar) == 'K') && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true;
+                return;
+            }
+
+            // Convertir una 'k' minúscula ingresada a mayúscula
+            if (char.ToLower(e.KeyChar) == 'k')
+            {
+                e.KeyChar = 'K';
+            }
+
+            // Verificar si el guion ya está presente en el texto
+            bool guionPresente = cbx_Rut.Text.Contains("-");
+
+            // Validar el máximo de 8 dígitos antes del guion
+            if (!guionPresente && char.IsDigit(e.KeyChar) && cbx_Rut.Text.Length >= 8)
+            {
+                e.Handled = true;
+                return;
+            }
+
+            // Validar el máximo de 1 dígito o letra después del guion
+            if (guionPresente && cbx_Rut.Text.Substring(cbx_Rut.Text.IndexOf("-")).Length >= 2 && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true;
+                return;
+            }
+
+            // Agregar el número o letra ingresada
+            if ((char.IsDigit(e.KeyChar) && !guionPresente) || char.ToUpper(e.KeyChar) == 'K')
+            {
+                cbx_Rut.Text += e.KeyChar;
+                e.Handled = true; // Evitar que se ingrese el carácter directamente en el textbox
+            }
+
+            // Mover el cursor al final del texto
+            cbx_Rut.SelectionStart = cbx_Rut.Text.Length;
+
+            // Formatear el Rut según la estructura especificada
+            if (e.KeyChar == '-')
+            {
+                FormatearRut();
+                e.Handled = true; // Evitar que se ingrese el guion directamente en el textbox
+            }
+            else if (e.KeyChar == (char)Keys.Back) // Borrar
+            {
+                if (cbx_Rut.Text.EndsWith("-"))
+                {
+                    cbx_Rut.Text = cbx_Rut.Text.Replace(".", "");
+                    cbx_Rut.Text = cbx_Rut.Text.Substring(0, cbx_Rut.Text.Length - 1);
+                }
+                else if (cbx_Rut.Text.Length > 0)
+                {
+                    cbx_Rut.Text = cbx_Rut.Text.Remove(cbx_Rut.Text.Length - 1);
+                }
+
+                // Mover el cursor al final del texto después de borrar
+                cbx_Rut.SelectionStart = cbx_Rut.Text.Length;
+
+                e.Handled = true; // Evitar que se ejecute el comportamiento predeterminado del retroceso
+            }
+        }
+
+        private void FormatearRut()
+        {
+            string rut = cbx_Rut.Text.Replace(".", "").Replace("-", "");
+
+            if (rut.Length == 7)
+            {
+                rut = $"{rut.Substring(0, 1)}.{rut.Substring(1, 3)}.{rut.Substring(4, 3)}-";
+            }
+            else if (rut.Length == 8)
+            {
+                rut = $"{rut.Substring(0, 2)}.{rut.Substring(2, 3)}.{rut.Substring(5, 3)}-";
+            }
+
+            cbx_Rut.Text = rut;
+
+            // Mover el cursor al final del texto después de formatear
+            cbx_Rut.SelectionStart = cbx_Rut.Text.Length;
+        }
+
+        private void AdministarPedidos_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            connection.Close();
+        }
+
+        private List<PedidoMolde> ObtenerFiltrados1(string filtro1)
+        {
+            List<PedidoMolde> ListaBD = ObtenerPedidos();
+            List<PedidoMolde> filtrados = new List<PedidoMolde>();
+
+            if (int.TryParse(filtro1, out int idTalla))
+            {
+                foreach (PedidoMolde detalle in ListaBD)
+                {
+                    if (detalle.IdCliente == idTalla)
+                    {
+                        filtrados.Add(detalle);
+                    }
+                }
+            }
+
+            return filtrados;
+        }
+
+        private void cbx_IdDistribucion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string filtro = Convert.ToString(cbx_IdDistribucion.SelectedValue);
+
+            // Obtener los detalles de pedido filtrados
+            List<PedidoMolde> filtrados = ObtenerFiltrados2(filtro);
+
+            // Actualizar el origen de datos del DataGridView
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = filtrados;
+
+            dataGridView1.Columns["IdPedido"].DisplayIndex = 0;
+            dataGridView1.Columns["IdCliente"].DisplayIndex = 1;
+            dataGridView1.Columns["IdDistribucion"].DisplayIndex = 2;
+            dataGridView1.Columns["IdPago"].DisplayIndex = 3;
+            dataGridView1.Columns["IdRepartidor"].DisplayIndex = 4;
+            dataGridView1.Columns["TotalMoldes"].DisplayIndex = 5;
+            dataGridView1.Columns["ValorPedido"].DisplayIndex = 6;
+            dataGridView1.Columns["NumBoletaImpresa"].DisplayIndex = 7;
+            dataGridView1.Columns["Fecha"].DisplayIndex = 8;
+            dataGridView1.Columns["IdEstado"].DisplayIndex = 9;
+
+            dataGridView1.Columns[0].HeaderText = "ID Pedido";
+            dataGridView1.Columns[1].HeaderText = "Cliente";
+            dataGridView1.Columns[2].HeaderText = "ID Estado";
+            dataGridView1.Columns[3].HeaderText = "Repartidor";
+            dataGridView1.Columns[4].HeaderText = "Distribucion";
+            dataGridView1.Columns[5].HeaderText = "Tipo de Pago";
+            dataGridView1.Columns[6].HeaderText = "Total de Moldes";
+            dataGridView1.Columns[7].HeaderText = "Valor del Pedido";
+            dataGridView1.Columns[8].HeaderText = "Numero de Boleta";
+            dataGridView1.Columns[9].HeaderText = "Fecha";
+        }
+
+        private List<PedidoMolde> ObtenerFiltrados2(string filtro1)
+        {
+            List<PedidoMolde> ListaBD = ObtenerPedidos();
+            List<PedidoMolde> filtrados = new List<PedidoMolde>();
+
+            if (int.TryParse(filtro1, out int idTalla))
+            {
+                foreach (PedidoMolde detalle in ListaBD)
+                {
+                    if (detalle.IdDistribucion == idTalla)
+                    {
+                        filtrados.Add(detalle);
+                    }
+                }
+            }
+
+            return filtrados;
+        }
+
+        private void cbx_IdPago_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string filtro = Convert.ToString(cbx_IdPago.SelectedValue);
+
+            // Obtener los detalles de pedido filtrados
+            List<PedidoMolde> filtrados = ObtenerFiltrados3(filtro);
+
+            // Actualizar el origen de datos del DataGridView
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = filtrados;
+
+            dataGridView1.Columns["IdPedido"].DisplayIndex = 0;
+            dataGridView1.Columns["IdCliente"].DisplayIndex = 1;
+            dataGridView1.Columns["IdDistribucion"].DisplayIndex = 2;
+            dataGridView1.Columns["IdPago"].DisplayIndex = 3;
+            dataGridView1.Columns["IdRepartidor"].DisplayIndex = 4;
+            dataGridView1.Columns["TotalMoldes"].DisplayIndex = 5;
+            dataGridView1.Columns["ValorPedido"].DisplayIndex = 6;
+            dataGridView1.Columns["NumBoletaImpresa"].DisplayIndex = 7;
+            dataGridView1.Columns["Fecha"].DisplayIndex = 8;
+            dataGridView1.Columns["IdEstado"].DisplayIndex = 9;
+
+            dataGridView1.Columns[0].HeaderText = "ID Pedido";
+            dataGridView1.Columns[1].HeaderText = "Cliente";
+            dataGridView1.Columns[2].HeaderText = "ID Estado";
+            dataGridView1.Columns[3].HeaderText = "Repartidor";
+            dataGridView1.Columns[4].HeaderText = "Distribucion";
+            dataGridView1.Columns[5].HeaderText = "Tipo de Pago";
+            dataGridView1.Columns[6].HeaderText = "Total de Moldes";
+            dataGridView1.Columns[7].HeaderText = "Valor del Pedido";
+            dataGridView1.Columns[8].HeaderText = "Numero de Boleta";
+            dataGridView1.Columns[9].HeaderText = "Fecha";
+        }
+
+        private List<PedidoMolde> ObtenerFiltrados3(string filtro1)
+        {
+            List<PedidoMolde> ListaBD = ObtenerPedidos();
+            List<PedidoMolde> filtrados = new List<PedidoMolde>();
+
+            if (int.TryParse(filtro1, out int idTalla))
+            {
+                foreach (PedidoMolde detalle in ListaBD)
+                {
+                    if (detalle.IdPago == idTalla)
+                    {
+                        filtrados.Add(detalle);
+                    }
+                }
+            }
+
+            return filtrados;
+        }
+
+        private void cbx_IdRepartidor_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string filtro = Convert.ToString(cbx_IdRepartidor.SelectedValue);
+
+            // Obtener los detalles de pedido filtrados
+            List<PedidoMolde> filtrados = ObtenerFiltrados4(filtro);
+
+            // Actualizar el origen de datos del DataGridView
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = filtrados;
+
+            dataGridView1.Columns["IdPedido"].DisplayIndex = 0;
+            dataGridView1.Columns["IdCliente"].DisplayIndex = 1;
+            dataGridView1.Columns["IdDistribucion"].DisplayIndex = 2;
+            dataGridView1.Columns["IdPago"].DisplayIndex = 3;
+            dataGridView1.Columns["IdRepartidor"].DisplayIndex = 4;
+            dataGridView1.Columns["TotalMoldes"].DisplayIndex = 5;
+            dataGridView1.Columns["ValorPedido"].DisplayIndex = 6;
+            dataGridView1.Columns["NumBoletaImpresa"].DisplayIndex = 7;
+            dataGridView1.Columns["Fecha"].DisplayIndex = 8;
+            dataGridView1.Columns["IdEstado"].DisplayIndex = 9;
+
+            dataGridView1.Columns[0].HeaderText = "ID Pedido";
+            dataGridView1.Columns[1].HeaderText = "Cliente";
+            dataGridView1.Columns[2].HeaderText = "ID Estado";
+            dataGridView1.Columns[3].HeaderText = "Repartidor";
+            dataGridView1.Columns[4].HeaderText = "Distribucion";
+            dataGridView1.Columns[5].HeaderText = "Tipo de Pago";
+            dataGridView1.Columns[6].HeaderText = "Total de Moldes";
+            dataGridView1.Columns[7].HeaderText = "Valor del Pedido";
+            dataGridView1.Columns[8].HeaderText = "Numero de Boleta";
+            dataGridView1.Columns[9].HeaderText = "Fecha";
+        }
+
+        private List<PedidoMolde> ObtenerFiltrados4(string filtro1)
+        {
+            List<PedidoMolde> ListaBD = ObtenerPedidos();
+            List<PedidoMolde> filtrados = new List<PedidoMolde>();
+
+            if (int.TryParse(filtro1, out int idTalla))
+            {
+                foreach (PedidoMolde detalle in ListaBD)
+                {
+                    if (detalle.IdRepartidor == idTalla)
+                    {
+                        filtrados.Add(detalle);
+                    }
+                }
+            }
+
+            return filtrados;
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+            DateTime filtro = dateTimePicker1.Value.Date;
+
+            // Obtener los detalles de pedido filtrados
+            List<PedidoMolde> filtrados = ObtenerFiltrados5(filtro);
+
+            // Actualizar el origen de datos del DataGridView
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = filtrados;
+
+            dataGridView1.Columns["IdPedido"].DisplayIndex = 0;
+            dataGridView1.Columns["IdCliente"].DisplayIndex = 1;
+            dataGridView1.Columns["IdDistribucion"].DisplayIndex = 2;
+            dataGridView1.Columns["IdPago"].DisplayIndex = 3;
+            dataGridView1.Columns["IdRepartidor"].DisplayIndex = 4;
+            dataGridView1.Columns["TotalMoldes"].DisplayIndex = 5;
+            dataGridView1.Columns["ValorPedido"].DisplayIndex = 6;
+            dataGridView1.Columns["NumBoletaImpresa"].DisplayIndex = 7;
+            dataGridView1.Columns["Fecha"].DisplayIndex = 8;
+            dataGridView1.Columns["IdEstado"].DisplayIndex = 9;
+
+            dataGridView1.Columns[0].HeaderText = "ID Pedido";
+            dataGridView1.Columns[1].HeaderText = "Cliente";
+            dataGridView1.Columns[2].HeaderText = "ID Estado";
+            dataGridView1.Columns[3].HeaderText = "Repartidor";
+            dataGridView1.Columns[4].HeaderText = "Distribucion";
+            dataGridView1.Columns[5].HeaderText = "Tipo de Pago";
+            dataGridView1.Columns[6].HeaderText = "Total de Moldes";
+            dataGridView1.Columns[7].HeaderText = "Valor del Pedido";
+            dataGridView1.Columns[8].HeaderText = "Numero de Boleta";
+            dataGridView1.Columns[9].HeaderText = "Fecha";
+        }
+
+        private List<PedidoMolde> ObtenerFiltrados5(DateTime filtro)
+        {
+            List<PedidoMolde> ListaBD = ObtenerPedidos();
+            List<PedidoMolde> filtrados = new List<PedidoMolde>();
+
+            foreach (PedidoMolde detalle in ListaBD)
+            {
+                if (detalle.Fecha.Date == filtro)
+                {
+                    filtrados.Add(detalle);
+                }
+            }
+
+            return filtrados;
+        }
+
     }
+    
 }

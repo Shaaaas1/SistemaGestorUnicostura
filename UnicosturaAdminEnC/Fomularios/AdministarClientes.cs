@@ -466,9 +466,146 @@ namespace UnicosturaAdminEnC
             tbx_Rut.SelectionStart = tbx_Rut.Text.Length;
         }
 
+
+
+        private void tbx_NombreCliente_TextChanged(object sender, EventArgs e)
+        {
+            string filtro = tbx_NombreCliente.Text;
+
+            // Obtener las distribuciones filtradas
+            List<Cliente> Filtrado = ObtenerFiltrados(filtro);
+
+            // Actualizar el origen de datos del DataGridView
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = Filtrado;
+        }
+
+        private List<Cliente> ObtenerFiltrados(string filtro)
+        {
+            List<Cliente> ListaBD = ObtenerClientes();
+            List<Cliente> Filtrados = new List<Cliente>();
+
+            foreach (Cliente cosa in ListaBD)
+            {
+                if (cosa.NombreCliente.Contains(filtro))
+                {
+                    Filtrados.Add(cosa);
+                }
+            }
+
+            return Filtrados;
+        }
+
+        private void tbx_Alias_TextChanged(object sender, EventArgs e)
+        {
+            string filtro = tbx_Alias.Text;
+
+            // Obtener las distribuciones filtradas
+            List<Cliente> Filtrado = ObtenerFiltrados2(filtro);
+
+            // Actualizar el origen de datos del DataGridView
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = Filtrado;
+        }
+
+        private List<Cliente> ObtenerFiltrados2(string filtro)
+        {
+            List<Cliente> ListaBD = ObtenerClientes();
+            List<Cliente> Filtrados = new List<Cliente>();
+
+            foreach (Cliente cosa in ListaBD)
+            {
+                if (cosa.Alias.Contains(filtro))
+                {
+                    Filtrados.Add(cosa);
+                }
+            }
+
+            return Filtrados;
+        }
+
+        private void tbx_Rut_TextChanged(object sender, EventArgs e)
+        {
+            string filtro = tbx_Rut.Text;
+
+            // Obtener las distribuciones filtradas
+            List<Cliente> Filtrado = ObtenerFiltrados3(filtro);
+
+            // Actualizar el origen de datos del DataGridView
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = Filtrado;
+        }
+
+        private List<Cliente> ObtenerFiltrados3(string filtro)
+        {
+            List<Cliente> ListaBD = ObtenerClientes();
+            List<Cliente> Filtrados = new List<Cliente>();
+
+            foreach (Cliente cosa in ListaBD)
+            {
+                if (cosa.Rut.Contains(filtro))
+                {
+                    Filtrados.Add(cosa);
+                }
+            }
+
+            return Filtrados;
+        }
+
+        private void tbx_Fuente_TextChanged(object sender, EventArgs e)
+        {
+            string filtro = tbx_Fuente.Text;
+
+            // Obtener las distribuciones filtradas
+            List<Cliente> Filtrado = ObtenerFiltrados4(filtro);
+
+            // Actualizar el origen de datos del DataGridView
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = Filtrado;
+        }
+
+        private List<Cliente> ObtenerFiltrados4(string filtro)
+        {
+            List<Cliente> ListaBD = ObtenerClientes();
+            List<Cliente> Filtrados = new List<Cliente>();
+
+            foreach (Cliente cosa in ListaBD)
+            {
+                if (cosa.Fuente.Contains(filtro))
+                {
+                    Filtrados.Add(cosa);
+                }
+            }
+
+            return Filtrados;
+        }
+
         private void tbx_Direccion_TextChanged(object sender, EventArgs e)
         {
+            string filtro = tbx_Direccion.Text;
 
+            // Obtener las distribuciones filtradas
+            List<Cliente> Filtrado = ObtenerFiltrado5(filtro);
+
+            // Actualizar el origen de datos del DataGridView
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = Filtrado;
+        }
+
+        private List<Cliente> ObtenerFiltrado5(string filtro)
+        {
+            List<Cliente> ListaBD = ObtenerClientes();
+            List<Cliente> Filtrados = new List<Cliente>();
+
+            foreach (Cliente cosa in ListaBD)
+            {
+                if (cosa.Direccion.Contains(filtro))
+                {
+                    Filtrados.Add(cosa);
+                }
+            }
+
+            return Filtrados;
         }
     }
 }

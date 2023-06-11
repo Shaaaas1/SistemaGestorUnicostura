@@ -155,5 +155,33 @@ namespace UnicosturaAdminEnC
 
             return tipoPagos;
         }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            string filtro = textBox1.Text;
+
+            // Obtener las distribuciones filtradas
+            List<TipoPago> Filtrado = ObtenerFiltrados(filtro);
+
+            // Actualizar el origen de datos del DataGridView
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = Filtrado;
+        }
+
+        private List<TipoPago> ObtenerFiltrados(string filtro)
+        {
+            List<TipoPago> ListaBD = ObtenerTipoPagos();
+            List<TipoPago> Filtrados = new List<TipoPago>();
+
+            foreach (TipoPago cosa in ListaBD)
+            {
+                if (cosa.NombrePago.Contains(filtro))
+                {
+                    Filtrados.Add(cosa);
+                }
+            }
+
+            return Filtrados;
+        }
     }
 }

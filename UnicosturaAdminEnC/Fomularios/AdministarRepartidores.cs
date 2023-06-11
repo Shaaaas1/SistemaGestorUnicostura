@@ -159,5 +159,33 @@ namespace UnicosturaAdminEnC.Fomularios
         {
             AdministarRepartidor_Load(sender, e);
         }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            string filtro = textBox1.Text;
+
+            // Obtener las distribuciones filtradas
+            List<Repartidor> Filtrado = ObtenerFiltrados(filtro);
+
+            // Actualizar el origen de datos del DataGridView
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = Filtrado;
+        }
+
+        private List<Repartidor> ObtenerFiltrados(string filtro)
+        {
+            List<Repartidor> ListaBD = ObtenerRepartidores();
+            List<Repartidor> Filtrados = new List<Repartidor>();
+
+            foreach (Repartidor cosa in ListaBD)
+            {
+                if (cosa.NombreRepartidor.Contains(filtro))
+                {
+                    Filtrados.Add(cosa);
+                }
+            }
+
+            return Filtrados;
+        }
     }
 }
